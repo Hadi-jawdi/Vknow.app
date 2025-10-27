@@ -1,0 +1,86 @@
+{% include 'includes/header.html' %}
+{% load static %}
+
+<style>
+    .hero-title {
+      font-size: 3rem; /* Default (desktop) */
+    }
+    .hero-subtitle {
+      font-size: 1.25rem;
+    }
+    
+    /* Medium screens (tablet) */
+    @media (max-width: 992px) {
+      .hero-title {
+        font-size: 2.2rem;
+      }
+      .hero-subtitle {
+        font-size: 1.1rem;
+      }
+    }
+    
+    /* Small screens (mobile) */
+    @media (max-width: 576px) {
+      .hero-title {
+        font-size: 1.6rem;
+      }
+      .hero-subtitle {
+        font-size: 0.95rem;
+      }
+      .btn {
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+      }
+    }
+    </style>
+{% block content %}
+
+
+<!-- Hero Section -->
+<section class="hero-section position-relative text-center text-white">
+    <!-- Background Image -->
+    <img src="{% static 'images/hero-bg-3.jfif' %}" 
+         alt="Hero" 
+         class="img-fluid w-100" 
+         style="height: 85vh; object-fit: cover;">
+  
+    <!-- Overlay -->
+    <div class="overlay position-absolute top-0 start-0 w-100 h-100" 
+         style="background-color: rgba(0, 0, 0, 0.55);"></div>
+  
+    <!-- Text Content -->
+    <div class="hero-text position-absolute top-50 start-50 translate-middle">
+      <h1 class="fw-bold hero-title">به دنیای آموزش هوشمند خوش آمدید</h1>
+      <p class="lead mt-3 hero-subtitle">با یادگیری دیجیتال، آینده‌ی خود را بسازید</p>
+      <a href="{% url 'account_app:register_user' %}" class="btn btn-success btn-lg mt-3">شروع کنید</a>
+    </div>
+  </section>
+  
+ 
+
+   <!-- Features Section -->
+   <section id="features" class="features section my-5">
+    <div class="row gy-4 container-fluid">
+      {% for course in courses %}
+        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+          <div class="features-item">
+            <img src="{{ course.course_banner.url }}" alt="{{ course.course_name }}" class="img-fluid course_banner_image">
+            <i class="bi bi-eye" style="color: #ffbb2c;"></i>
+            <h3><a href="" class="stretched-link">{{ course.course_name }}</a></h3>
+            <p>{{ course.course_description|truncatewords:20 }}</p>
+          </div>
+        </div><!-- End Feature Item -->
+      {% endfor %}
+    </div>
+    
+
+   
+
+  </section><!-- /Features Section -->
+
+
+
+{% endblock %}
+
+
+{% include 'includes/footer.html' %}

@@ -1,0 +1,30 @@
+{% include 'includes/base.html' %} <br /><br />
+{% block content %}
+<div class="container py-5">
+  <h2>به وب‌سایت ما خوش آمدید!</h2>
+  <p>
+    حساب کاربری ندارید؟
+    <a class="text-danger" href="{% url "account_app:register_user" %}">ثبت‌نام کنید</a>
+  </p>
+  {% if error %}
+    <p>{{ error }}</p>
+  {% endif %}
+  <form action="{% url 'account_app:login_user' %}" method="post">
+    {% csrf_token %}
+    <label for="">نام کاربری:</label>
+    <input type="text" placeholder="نام کاربری" name="username" />
+    
+    <label for="">رمز عبور:</label>
+    <input type="password" placeholder="رمز عبور" name="password" />
+    
+    <button class="btn btn-success btn-md" type="submit">ورود</button>
+  </form>
+  <br />
+  <a>
+    <button class="btn btn-danger btn-md" type="submit">رمز عبور را فراموش کرده‌اید؟</button>
+  </a>
+</div>
+{% include 'includes/footer.html' %}
+
+<br /><br />
+{% endblock content %}

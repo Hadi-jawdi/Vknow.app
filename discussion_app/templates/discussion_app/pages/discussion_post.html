@@ -1,0 +1,21 @@
+{% include 'includes/header.html' %}
+
+{% block content %}
+<div class="container">
+
+<h2>ایجاد پست جدید</h2>
+<form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="title" class="form-label">عنوان</label>
+        <input type="text" class="form-control" name="title" id="title" required>
+    </div>
+    <div class="mb-3">
+        <label for="content" class="form-label">متن پیام</label>
+        <textarea class="form-control" name="content" id="content" rows="4" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-success">ارسال</button>
+</form>
+</div>
+
+{% endblock %}
