@@ -1,46 +1,75 @@
-
-
-{% include 'includes/header.html'%}
+{% include 'includes/header.html' %}
 
 {% block content %}
-<div class="container">
-<h2>بحث‌ها</h2>
-<a href="{% url 'discussion_app:new_post' %}" class="btn btn-primary">ایجاد پست جدید</a>
-<hr>
-{% for post in posts %}
-<div class="card mb-3">
-    <div class="card-body">
-        <small>{{ post.user.username }}</small>
-        <h5>{{ post.title }}</h5>
-        <p>{{ post.content }}</p>
-        <a href="{% url 'discussion_app:reply' post.id %}">پاسخ</a>
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary fw-bold">بحث‌ها</h2>
+        <a href="{% url 'discussion_app:new_post' %}" class="btn btn-success shadow btn-sm">
+            <i class="fa-solid fa-plus me-2"></i> ایجاد پست جدید
+        </a>
+    </div>
 
-        <!-- Replies -->
-        {% for reply in post.replies.all %}
-            <div class="card mt-2 ms-4">
-                <div class="card-body">
-                    <p>{{ reply.content }}</p>
-                    <small>{{ reply.user.username }}</small>
-                    <a href="{% url 'discussion_app:reply_to_reply' post.id reply.id %}">پاسخ به این پاسخ</a>
+    {% for post in posts %}
+    <div class="card mb-4 shadow-sm rounded-4">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <small class="text-muted">{{ post.user.username }}</small>
+                <small class="text-secondary">{{ post.created_at|date:"Y-m-d H:i" }}</small>
+            </div>
+            <h5 class="card-title text-primary">{{ post.title }}</h5>
+            <p class="card-text">{{ post.content }}</p>
+            <a href="{% url 'discussion_app:reply' post.id %}" class="btn btn-outline-primary btn-sm shadow">
+                پاسخ
+            </a>
 
-                    <!-- Nested replies -->
-                    {% for child in reply.child_replies.all %}
-                        <div class="card mt-2 ms-4">
-                            <div class="card-body">
-                                <p>{{ child.content }}</p>
-                                <small>{{ child.user.username }}</small>
+            <!-- Replies -->
+            {% for reply in post.replies.all %}
+            <div class="card mt-3 ms-3 shadow-sm rounded-3 reply-card">
+                <div class="card-body py-2 px-3 bg-light">
+                    <p class="mb-1">{{ reply.content }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">{{ reply.user.username }}</small>
+                        <a href="{% url 'discussion_app:reply_to_reply' post.id reply.id %}" class="text-decoration-none small">
+                            پاسخ به این پاسخ
+                        </a>
+
+                        <!-- Nested replies -->
+                        {% for child in reply.child_replies.all %}
+                        <div class="card mt-2 ms-3 shadow-sm rounded-3 reply-card">
+                            <div class="card-body py-2 px-3 bg-white">
+                                <p class="mb-1">{{ child.content }}</p>
+                                <small class="text-muted">{{ child.user.username }}</small>
                             </div>
                         </div>
-                    {% endfor %}
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
     </div>
+    {% empty %}
+    <p class="text-muted">هنوز هیچ پستی ایجاد نشده است.</p>
+    {% endfor %}
 </div>
-{% endfor %}
-</div>
+
+<style>
+    /* Subtle shadow for all cards */
+    .card {
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        transition: all 0.2s ease-in-out;
+    }
+
+    .card:hover {
+        box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+
+    /* Slightly bigger buttons */
+    .btn-lg {
+        font-size: 1.1rem;
+        padding: 0.5rem 1.2rem;
+    }
+</style>
 {% endblock %}
-
-
 
 {% include 'includes/footer.html'%}

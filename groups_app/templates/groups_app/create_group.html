@@ -1,0 +1,13 @@
+{% include 'includes/header.html' %}
+<div class="container mt-5 shadow p-4 rounded">
+  <h2>ایجاد گروه مطالعه</h2>
+  <form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label class="form-label">نام گروه</label>
+      <input type="text" name="name" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-success btn-lg">ایجاد گروه</button>
+  </form>
+</div>
+{% include 'includes/footer.html' %}

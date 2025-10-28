@@ -1,0 +1,36 @@
+{% include "includes/header.html" %}
+
+
+<div class="container">
+
+    {% block content%}
+<div class="container mt-5">
+    <h2>کتاب خود را آپلود کنید و سوالات ایجاد شده را مشاهده کنید</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="file" required class="form-control mb-3">
+        <button type="submit" class="btn btn-primary">آپلود و تولید سوال</button>
+    </form>
+
+    {% if questions %}
+        <h3 class="mt-4">سوالات ایجاد شده:</h3>
+        {% for q in questions %}
+            <div class="card my-3">
+                <div class="card-body">
+                    <p>{{ q.question }}</p>
+                    {% if q.options %}
+                        {% for key, option in q.options.items %}
+                            <div>{{ key }}. {{ option }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>
+
+
+    {% endblock content%}
+</div>
+
+{% include 'includes/footer.html'%}

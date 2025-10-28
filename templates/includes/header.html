@@ -7,7 +7,7 @@
     <nav class="navbar navbar-expand-sm navbar-light bg-light shadow-sm">
         <div class="container-fluid">
             <!-- Logo -->
-            <a class="navbar-brand flex items-center" href="/">
+            <a class="navbar-brand flex items-center" href="#">
                 <img src="" alt="لوگو" width="40" height="40" class="me-2 img-fluid">
             </a>
 
@@ -22,8 +22,8 @@
                 <ul class="navbar-nav mx-auto text-center">
                     <li class="nav-item"><a class="nav-link" href="/resources/">منابع</a></li>
                     <li class="nav-item"><a class="nav-link" href="/mock-tests/">آزمون‌های آزمایشی</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/groups/">گروه‌ها</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/discussion/">بحث و گفتگو</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'groups_app:create_group' %}">گروه‌ها</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'discussion_app:list' %}">بحث و گفتگو</a></li>
                     {% if user.is_authenticated %}
                     <li class="nav-item"><a class="nav-link" href="/discussion/">{{ request.user.username }}</a></li>
                     <li class="nav-item"><a class="nav-link btn btn-primary ms-lg-2 mt-2 mt-lg-0" href="/account/login/">خروج</a></li>

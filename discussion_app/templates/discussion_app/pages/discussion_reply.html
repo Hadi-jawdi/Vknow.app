@@ -1,23 +1,43 @@
 {% include 'includes/header.html'%}
 
-
 {% block content %}
-<div class="container shadow shadow-lg my-5">
-
-<h2>پاسخ به: {{ post.title }}</h2>
-{% if parent %}
-<p>در پاسخ به: {{ parent.content }}</p>
-{% endif %}
-<form method="post">
-    {% csrf_token %}
-    <div class="mb-3">
-        <label for="content" class="form-label">متن پاسخ</label>
-        <textarea class="form-control" name="content" id="content" rows="4" required></textarea>
+<div class="container my-5">
+    <div class="card shadow-lg rounded-4 p-4">
+        <h2 class="text-primary mb-3">پاسخ به: {{ post.title }}</h2>
+        
+        {% if parent %}
+        <div class="card mb-3 shadow-sm rounded-3 p-3 bg-light">
+            <strong>در پاسخ به:</strong>
+            <p class="mb-0">{{ parent.content }}</p>
+        </div>
+        {% endif %}
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="content" class="form-label fw-semibold">متن پاسخ</label>
+                <textarea class="form-control" name="content" id="content" rows="4" placeholder="نظر خود را بنویسید..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-success btn-lg shadow">ارسال پاسخ</button>
+        </form>
     </div>
-    <button type="submit" class="btn btn-success my-2">ارسال پاسخ</button>
-</form>
 </div>
 
+<style>
+    .card {
+        transition: all 0.2s ease-in-out;
+    }
+    .card:hover {
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    .btn-lg {
+        font-size: 1.1rem;
+        padding: 0.5rem 1.2rem;
+    }
+    textarea.form-control {
+        resize: none;
+    }
+</style>
 {% endblock %}
 
 {% include 'includes/footer.html'%}

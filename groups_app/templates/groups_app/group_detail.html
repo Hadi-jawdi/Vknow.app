@@ -1,0 +1,58 @@
+\{% include 'includes/header.html' %}
+
+<div class="container my-5">
+  <div class="card shadow-lg rounded p-4 bg-light">
+    <h2 class="mb-2">گروه: {{ group.name }}</h2>
+    <p class="text-muted">کد گروه: <strong>{{ group.code }}</strong></p>
+    
+    <hr>
+
+    <h4 class="mb-3">پیام‌ها</h4>
+    {% for msg in messages %}
+    <div class="card mb-3 shadow-sm rounded">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <strong>{{ msg.user.username }}</strong>
+          <small class="text-muted">{{ msg.created_at|date:"Y-m-d H:i" }}</small>
+        </div>
+        <p>{{ msg.content }}</p>
+        
+        {% if msg.file %}
+        {% if ".jpg" in msg.file.url or ".png" in msg.file.url %}
+        <img src="{{ msg.file.url }}" class="img-fluid rounded mb-2" alt="attachment">
+      
+
+
+        <!-- Display image -->
+          <img src="{{ msg.file.url }}" class="img-fluid rounded shadow-sm my-2" alt="User file">
+          {% else %}
+          <!-- Download link for non-images -->
+          <a href="{{ msg.file.url }}" download class="btn btn-outline-success btn-sm my-2">دانلود فایل</a>
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+    {% empty %}
+      <p class="text-center text-muted">هنوز پیامی ارسال نشده است.</p>
+    {% endfor %}
+
+    <hr>
+    <h4 class="mb-3">ارسال پیام</h4>
+    {% if user.is_authenticated %}
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="mb-3">
+        <textarea name="content" rows="3" class="form-control form-control-lg" placeholder="پیام خود را بنویسید..." required></textarea>
+      </div>
+      <div class="mb-3">
+        <input type="file" name="file" class="form-control">
+      </div>
+      <button type="submit" class="btn btn-success btn-lg w-100 shadow-sm">ارسال</button>
+    </form>
+    {% else %}
+      <p class="text-danger text-center mt-3">برای ارسال پیام باید وارد حساب کاربری شوید.</p>
+    {% endif %}
+  </div>
+</div>
+
+{% include 'includes/footer.html' %}

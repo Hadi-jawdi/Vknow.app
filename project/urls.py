@@ -11,6 +11,8 @@ urlpatterns = [
     path('courses/', include("courses_app.urls")),
     path('discussion/', include("discussion_app.urls")),
     path('resources/', include("resources_app.urls")),
+    path('upload/', include("upload_book_app.urls")),
+    path('group/', include("groups_app.urls")),
     
 ]
 

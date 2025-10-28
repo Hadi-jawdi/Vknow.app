@@ -58,3 +58,8 @@ def register_user(request):
         'form':form
     }
     return render(request,'account_app/pages/register.html',context)
+
+
+def dashboard(request):
+    return render(request, "account_app/pages/dashboard.html")
+    

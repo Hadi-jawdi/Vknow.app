@@ -33,6 +33,10 @@ INSTALLED_APPS = [
     'courses_app',
     'discussion_app',
     'resources_app',
+    'upload_book_app',
+    'groups_app',
+    
+    
     
     
 
