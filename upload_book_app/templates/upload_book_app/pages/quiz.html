@@ -1,0 +1,197 @@
+{% include "includes/header.html" %}
+
+<div class="container">
+    {% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <!-- Progress Bar -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-muted">سوال {{ question_number }} از {{ total_questions }}</span>
+                            <span class="text-muted">{{ quiz_session.book.title }}</span>
+                        </div>
+                        <div class="progress" style="height: 25px;">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                                 role="progressbar" 
+                                 data-progress="{{ progress_percent }}"
+                                 aria-valuenow="{{ question_number }}" 
+                                 aria-valuemin="0" 
+                                 aria-valuemax="{{ total_questions }}">
+                                {{ progress_percent }}%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question Card -->
+                <div class="card shadow-lg">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">سوال {{ question_number }}</h4>
+                    </div>
+                    <div class="card-body">
+                        <form id="quiz-form" data-question-id="{{ question.id }}" data-session-id="{{ quiz_session.id }}">
+                            {% csrf_token %}
+                            <div class="question-text mb-4">
+                                <p class="lead">{{ question.question_text }}</p>
+                            </div>
+
+                            <div class="options">
+                                <div class="form-check mb-3 p-3 border rounded option-item" data-option="A">
+                                    <input class="form-check-input" type="radio" name="answer" id="optionA" value="A" required>
+                                    <label class="form-check-label w-100" for="optionA">
+                                        <strong>الف</strong> {{ question.option_a }}
+                                    </label>
+                                </div>
+
+                                <div class="form-check mb-3 p-3 border rounded option-item" data-option="B">
+                                    <input class="form-check-input" type="radio" name="answer" id="optionB" value="B" required>
+                                    <label class="form-check-label w-100" for="optionB">
+                                        <strong>ب</strong> {{ question.option_b }}
+                                    </label>
+                                </div>
+
+                                <div class="form-check mb-3 p-3 border rounded option-item" data-option="C">
+                                    <input class="form-check-input" type="radio" name="answer" id="optionC" value="C" required>
+                                    <label class="form-check-label w-100" for="optionC">
+                                        <strong>ج</strong> {{ question.option_c }}
+                                    </label>
+                                </div>
+
+                                <div class="form-check mb-3 p-3 border rounded option-item" data-option="D">
+                                    <input class="form-check-input" type="radio" name="answer" id="optionD" value="D" required>
+                                    <label class="form-check-label w-100" for="optionD">
+                                        <strong>د</strong> {{ question.option_d }}
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between mt-4">
+                                {% if question_number > 1 %}
+                                <button type="button" class="btn btn-secondary" onclick="history.back()">
+                                    <i class="fas fa-arrow-right me-2"></i>قبلی
+                                </button>
+                                {% else %}
+                                <div></div>
+                                {% endif %}
+                                
+                                {% if question_number == total_questions %}
+                                <button type="submit" class="btn btn-success btn-lg" id="submit-btn">
+                                    <i class="fas fa-check me-2"></i>اتمام آزمون
+                                </button>
+                                {% else %}
+                                <button type="submit" class="btn btn-primary btn-lg" id="next-btn">
+                                    بعدی <i class="fas fa-arrow-left me-2"></i>
+                                </button>
+                                {% endif %}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock content %}
+</div>
+
+{% include 'includes/footer.html' %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Set progress bar width
+    const progressBar = document.querySelector('.progress-bar');
+    if (progressBar) {
+        const progress = progressBar.dataset.progress;
+        progressBar.style.width = progress + '%';
+    }
+    
+    const form = document.getElementById('quiz-form');
+    const questionId = form.dataset.questionId;
+    const sessionId = form.dataset.sessionId;
+    const optionItems = document.querySelectorAll('.option-item');
+    const submitBtn = document.getElementById('submit-btn');
+    const nextBtn = document.getElementById('next-btn');
+
+    // Highlight selected option
+    optionItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const radio = this.querySelector('input[type="radio"]');
+            radio.checked = true;
+            optionItems.forEach(i => i.classList.remove('bg-light', 'border-primary'));
+            this.classList.add('bg-light', 'border-primary');
+        });
+    });
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const selectedAnswer = document.querySelector('input[name="answer"]:checked');
+        if (!selectedAnswer) {
+            alert('لطفاً یک گزینه را انتخاب کنید');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('question_id', questionId);
+        formData.append('answer', selectedAnswer.value);
+        formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+
+        // Disable buttons during submission
+        if (submitBtn) submitBtn.disabled = true;
+        if (nextBtn) nextBtn.disabled = true;
+
+        fetch(`/upload/submit-answer/${sessionId}/`, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // If last question, redirect to results
+                if (submitBtn) {
+                    window.location.href = `/upload/submit-quiz/${sessionId}/`;
+                } else {
+                    // Move to next question
+                    window.location.reload();
+                }
+            } else {
+                alert('خطا در ثبت پاسخ');
+                if (submitBtn) submitBtn.disabled = false;
+                if (nextBtn) nextBtn.disabled = false;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('خطا در ارتباط با سرور');
+            if (submitBtn) submitBtn.disabled = false;
+            if (nextBtn) nextBtn.disabled = false;
+        });
+    });
+});
+</script>
+
+<style>
+.option-item {
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.option-item:hover {
+    background-color: #f8f9fa;
+    border-color: #0d6efd !important;
+}
+
+.option-item.bg-light {
+    background-color: #e7f3ff !important;
+}
+
+.progress-bar {
+    font-size: 14px;
+    line-height: 25px;
+}
+</style>
+

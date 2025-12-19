@@ -1,36 +1,56 @@
 {% include "includes/header.html" %}
 
-
 <div class="container">
+    {% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h2 class="mb-0">آپلود کتاب و تولید سوالات</h2>
+                    </div>
+                    <div class="card-body">
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
 
-    {% block content%}
-<div class="container mt-5">
-    <h2>کتاب خود را آپلود کنید و سوالات ایجاد شده را مشاهده کنید</h2>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <input type="file" name="file" required class="form-control mb-3">
-        <button type="submit" class="btn btn-primary">آپلود و تولید سوال</button>
-    </form>
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="id_pdf_file" class="form-label">فایل PDF کتاب را انتخاب کنید:</label>
+                                {{ form.pdf_file }}
+                                {% if form.pdf_file.errors %}
+                                    <div class="text-danger mt-1">
+                                        {% for error in form.pdf_file.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <small class="form-text text-muted">حداکثر حجم فایل: 50 مگابایت</small>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-upload me-2"></i>آپلود و تولید سوالات
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
 
-    {% if questions %}
-        <h3 class="mt-4">سوالات ایجاد شده:</h3>
-        {% for q in questions %}
-            <div class="card my-3">
-                <div class="card-body">
-                    <p>{{ q.question }}</p>
-                    {% if q.options %}
-                        {% for key, option in q.options.items %}
-                            <div>{{ key }}. {{ option }}</div>
-                        {% endfor %}
-                    {% endif %}
+                <div class="mt-4 text-center">
+                    <a href="{% url 'upload_book_app:my_books' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-book me-2"></i>کتاب‌های من
+                    </a>
                 </div>
             </div>
-        {% endfor %}
-    {% endif %}
+        </div>
+    </div>
+    {% endblock content %}
 </div>
 
-
-    {% endblock content%}
-</div>
-
-{% include 'includes/footer.html'%}
+{% include 'includes/footer.html' %}
