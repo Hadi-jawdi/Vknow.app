@@ -3,62 +3,70 @@ from django import forms
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-
-
-
 # for registering user with email 
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
+from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+
+
 class CustomUserCreationForm(UserCreationForm):
+    username = forms.CharField(
+        label="نام کاربری",
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'نام کاربری خود را وارد کنید',
+                'autofocus': True,
+            }
+        ),
+    )
+
     email = forms.EmailField(
+        label="ایمیل",
         required=True,
-        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'})
+        widget=forms.EmailInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'example@email.com',
+            }
+        ),
     )
+
     password1 = forms.CharField(
-        label="Password",
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}),
+        label="رمز عبور",
+        widget=forms.PasswordInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'حداقل ۸ کاراکتر',
+            }
+        ),
+        help_text="رمز عبور باید حداقل ۸ کاراکتر باشد.",
     )
+
     password2 = forms.CharField(
-        label="Confirm Password",
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirm Password'}),
+        label="تأیید رمز عبور",
+        widget=forms.PasswordInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'رمز عبور را دوباره وارد کنید',
+            }
+        ),
     )
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password1', 'password2']
-        widgets = {
-            'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'}),
-        }
+        fields = ("username", "email", "password1", "password2")
 
     def save(self, commit=True):
         user = super().save(commit=False)
-        user.email = self.cleaned_data['email']  # Save the email field
+        user.email = self.cleaned_data["email"]
         if commit:
             user.save()
         return user
-
-# class CustomUserCreationForm(UserCreationForm):
-#     email = forms.EmailField(required=True)  # Adding the email field
-
-#     class Meta:
-#         model = User
-#         fields = ['username', 'email', 'password1', 'password2']  # Specify fields to include
-#         widgets = {
-#             'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'}),
-#             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email '}),
-#             'password1': forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}),
-#             'password2': forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirm Password'}),
-#         }
-
-#     def save(self, commit=True):
-#         user = super().save(commit=False)
-#         user.email = self.cleaned_data['email']  # Save the email field
-#         if commit:
-#             user.save()
-#         return user
-
 
 
 

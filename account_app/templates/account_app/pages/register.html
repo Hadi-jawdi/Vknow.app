@@ -1,19 +1,46 @@
 {% include 'includes/base.html' %}
 
-<div class="container">
-  <h1 class="text-center text-primary">PLease Register Yourself Here / <a href = '{% url "account_app:login_user"%}'>Login</a></h1>
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-7 col-lg-6">
 
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
 
+          <h3 class="text-center mb-3">ایجاد حساب کاربری</h3>
+          <p class="text-center text-muted mb-4">
+            لطفاً اطلاعات خود را برای ثبت‌نام وارد کنید
+          </p>
 
-  <form action="{%url 'account_app:register_user'%}" method="post">
-    {%csrf_token%} {{form.as_p}}
-    <div class="d-grid">
-      <button class="btn btn-success py-2 m-2 btn-block" type="submit">
-        Register
-      </button>
+          <p class="text-center mb-4">
+            قبلاً ثبت‌نام کرده‌اید؟
+            <a href="{% url 'account_app:login_user' %}" class="fw-bold text-primary">
+              وارد شوید
+            </a>
+          </p>
+
+          <form action="{% url 'account_app:register_user' %}" method="post">
+            {% csrf_token %}
+
+            <!-- Django Form -->
+            <div class="mb-3">
+              {{ form.as_p }}
+            </div>
+
+            <div class="d-grid mt-3">
+              <button class="btn btn-success btn-lg" type="submit">
+                ثبت‌نام
+              </button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+
     </div>
-    <br />
-    <br />
-  </form>
+  </div>
 </div>
-{% include 'includes/footer.html'%}
+
+{% include 'includes/footer.html' %}
+{% endblock content %}

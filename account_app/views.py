@@ -61,5 +61,6 @@ def register_user(request):
 
 
 def dashboard(request):
+
     return render(request, "account_app/pages/dashboard.html")
     
