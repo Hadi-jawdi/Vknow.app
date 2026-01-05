@@ -1,75 +1,233 @@
 {% include 'includes/header.html' %}
 
 {% block content %}
-<div class="container my-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="text-primary fw-bold">بحث‌ها</h2>
-        <a href="{% url 'discussion_app:new_post' %}" class="btn btn-success shadow btn-sm">
-            <i class="fa-solid fa-plus me-2"></i> ایجاد پست جدید
-        </a>
+<div class="container my-4 my-md-5">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+                <div>
+                    <h3 class="fw-bold text-dark mb-2">
+                        <i class="fas fa-comments text-primary me-2"></i>بحث و گفتگو
+                    </h3>
+                    <p class="text-muted mb-0">به جامعه ما بپیوندید و در گفتگوها شرکت کنید</p>
+                </div>
+                <a href="{% url 'discussion_app:new_post' %}" class="btn btn-primary btn-lg shadow-sm">
+                    <i class="fas fa-plus me-2"></i>ایجاد پست جدید
+                </a>
+            </div>
+        </div>
     </div>
 
-    {% for post in posts %}
-    <div class="card mb-4 shadow-sm rounded-4">
-        <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <small class="text-muted">{{ post.user.username }}</small>
-                <small class="text-secondary">{{ post.created_at|date:"Y-m-d H:i" }}</small>
-            </div>
-            <h5 class="card-title text-primary">{{ post.title }}</h5>
-            <p class="card-text">{{ post.content }}</p>
-            <a href="{% url 'discussion_app:reply' post.id %}" class="btn btn-outline-primary btn-sm shadow">
-                پاسخ
-            </a>
+    <!-- Posts List -->
+    <div class="row">
+        <div class="col-12 col-lg-10 col-xl-9 mx-auto">
+            {% for post in posts %}
+            <article class="card border-0 shadow-sm mb-4 post-card">
+                <div class="card-body p-4">
+                    <!-- Post Header -->
+                    <div class="d-flex align-items-start justify-content-between mb-3">
+                        <div class="d-flex align-items-center flex-grow-1">
+                            <div class="bg-primary bg-gradient rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 45px; height: 45px;">
+                                <i class="fas fa-user text-white"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0 fw-semibold text-dark">{{ post.user.username }}</h6>
+                                <small class="text-muted">
+                                    <i class="far fa-clock me-1"></i>
+                                    {{ post.created_at|date:"d F Y - H:i" }}
+                                </small>
+                            </div>
+                        </div>
+                        <span class="badge bg-light text-dark border">
+                            <i class="fas fa-reply me-1"></i>{{ post.replies.count }} پاسخ
+                        </span>
+                    </div>
 
-            <!-- Replies -->
-            {% for reply in post.replies.all %}
-            <div class="card mt-3 ms-3 shadow-sm rounded-3 reply-card">
-                <div class="card-body py-2 px-3 bg-light">
-                    <p class="mb-1">{{ reply.content }}</p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <small class="text-muted">{{ reply.user.username }}</small>
-                        <a href="{% url 'discussion_app:reply_to_reply' post.id reply.id %}" class="text-decoration-none small">
-                            پاسخ به این پاسخ
+                    <!-- Post Content -->
+                    <h4 class="card-title fw-bold text-dark mb-3">
+                        <a href="#" class="text-decoration-none text-dark">{{ post.title }}</a>
+                    </h4>
+                    <p class="card-text text-muted mb-4" style="line-height: 1.8;">
+                        {{ post.content|truncatewords:50 }}
+                    </p>
+
+                    <!-- Post Actions -->
+                    <div class="d-flex flex-wrap gap-2 align-items-center">
+                        <a href="{% url 'discussion_app:reply' post.id %}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-reply me-1"></i>پاسخ دهید
                         </a>
+                        <button class="btn btn-outline-secondary btn-sm share-btn" data-post-id="{{ post.id }}">
+                            <i class="fas fa-share-alt me-1"></i>اشتراک‌گذاری
+                        </button>
+                    </div>
 
-                        <!-- Nested replies -->
-                        {% for child in reply.child_replies.all %}
-                        <div class="card mt-2 ms-3 shadow-sm rounded-3 reply-card">
-                            <div class="card-body py-2 px-3 bg-white">
-                                <p class="mb-1">{{ child.content }}</p>
-                                <small class="text-muted">{{ child.user.username }}</small>
+                    <!-- Replies Section -->
+                    {% if post.replies.all %}
+                    <div class="mt-4 pt-4 border-top">
+                        <h6 class="fw-semibold mb-3 text-muted">
+                            <i class="fas fa-comments me-2"></i>پاسخ‌ها
+                        </h6>
+                        
+                        {% for reply in post.replies.all %}
+                        <div class="card border-0 bg-light mb-3 reply-card">
+                            <div class="card-body p-3">
+                                <div class="d-flex align-items-start mb-2">
+                                    <div class="bg-secondary bg-gradient rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 35px; height: 35px;">
+                                        <i class="fas fa-user text-white small"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <span class="fw-semibold small">{{ reply.user.username }}</span>
+                                            <small class="text-muted">{{ reply.created_at|date:"d F Y - H:i" }}</small>
+                                        </div>
+                                        <p class="mb-2 small" style="line-height: 1.7;">{{ reply.content }}</p>
+                                        <a href="{% url 'discussion_app:reply_to_reply' post.id reply.id %}" class="text-decoration-none small text-primary">
+                                            <i class="fas fa-reply me-1"></i>پاسخ به این نظر
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <!-- Nested Replies -->
+                                {% if reply.child_replies.all %}
+                                <div class="mt-3 me-4">
+                                    {% for child in reply.child_replies.all %}
+                                    <div class="card border-0 bg-white mb-2">
+                                        <div class="card-body p-2">
+                                            <div class="d-flex align-items-start">
+                                                <div class="bg-light border rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 30px; height: 30px;">
+                                                    <i class="fas fa-user text-secondary" style="font-size: 0.7rem;"></i>
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                                        <span class="fw-semibold" style="font-size: 0.85rem;">{{ child.user.username }}</span>
+                                                        <small class="text-muted" style="font-size: 0.75rem;">{{ child.created_at|date:"d F Y - H:i" }}</small>
+                                                    </div>
+                                                    <p class="mb-0" style="font-size: 0.9rem; line-height: 1.6;">{{ child.content }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
                             </div>
                         </div>
                         {% endfor %}
                     </div>
+                    {% endif %}
+                </div>
+            </article>
+            {% empty %}
+            <!-- Empty State -->
+            <div class="card border-0 shadow-sm text-center py-5">
+                <div class="card-body">
+                    <div class="mb-4">
+                        <i class="fas fa-comments text-muted" style="font-size: 4rem; opacity: 0.3;"></i>
+                    </div>
+                    <h4 class="text-muted mb-3">هنوز هیچ پستی ایجاد نشده است</h4>
+                    <p class="text-muted mb-4">اولین کسی باشید که بحث را شروع می‌کند!</p>
+                    <a href="{% url 'discussion_app:new_post' %}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-plus me-2"></i>ایجاد اولین پست
+                    </a>
                 </div>
             </div>
             {% endfor %}
         </div>
     </div>
-    {% empty %}
-    <p class="text-muted">هنوز هیچ پستی ایجاد نشده است.</p>
-    {% endfor %}
 </div>
 
 <style>
-    /* Subtle shadow for all cards */
-    .card {
-        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-        transition: all 0.2s ease-in-out;
+    .post-card {
+        transition: all 0.3s ease;
+        border-left: 4px solid transparent !important;
     }
-
-    .card:hover {
-        box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    
+    .post-card:hover {
+        transform: translateX(-5px);
+        box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15) !important;
+        border-left-color: #6c63ff !important;
     }
-
-    /* Slightly bigger buttons */
-    .btn-lg {
-        font-size: 1.1rem;
-        padding: 0.5rem 1.2rem;
+    
+    .reply-card {
+        transition: all 0.2s ease;
+    }
+    
+    .reply-card:hover {
+        box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1) !important;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, #6c63ff 0%, #9a8bff 100%);
+        border: none;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #5a52e5 0%, #8a7be5 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 0.5rem 1rem rgba(108, 99, 255, 0.4) !important;
+    }
+    
+    .btn-outline-primary {
+        border-color: #6c63ff;
+        color: #6c63ff;
+        transition: all 0.2s ease;
+    }
+    
+    .btn-outline-primary:hover {
+        background-color: #6c63ff;
+        border-color: #6c63ff;
+        color: white;
+        transform: translateY(-1px);
+    }
+    
+    .card-title a:hover {
+        color: #6c63ff !important;
+        transition: color 0.2s ease;
+    }
+    
+    @media (max-width: 768px) {
+        .post-card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .card-body {
+            padding: 1.25rem !important;
+        }
+        
+        h1 {
+            font-size: 1.75rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .card-body {
+            padding: 1rem !important;
+        }
+        
+        .btn-lg {
+            font-size: 1rem;
+            padding: 0.5rem 1rem;
+        }
     }
 </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const shareButtons = document.querySelectorAll('.share-btn');
+        shareButtons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                const url = window.location.origin + '{% url "discussion_app:list" %}';
+                navigator.clipboard.writeText(url).then(function() {
+                    alert('لینک پست کپی شد!');
+                }).catch(function() {
+                    alert('خطا در کپی کردن لینک');
+                });
+            });
+        });
+    });
+</script>
 {% endblock %}
 
-{% include 'includes/footer.html'%}
+{% include 'includes/footer.html' %}

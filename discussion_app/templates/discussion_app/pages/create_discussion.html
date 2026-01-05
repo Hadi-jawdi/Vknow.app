@@ -1,17 +1,146 @@
 {% include 'includes/header.html' %}
 
 {% block content %}
-<h2>ایجاد پست جدید</h2>
-<form method="post">
-    {% csrf_token %}
-    <div class="mb-3">
-        <label for="title" class="form-label">عنوان</label>
-        <input type="text" class="form-control" name="title" id="title" required>
+<div class="container my-4 my-md-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-8 col-xl-7">
+            <!-- Header Card -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-primary bg-gradient rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                            <i class="fas fa-edit text-white fs-5"></i>
+                        </div>
+                        <div>
+                            <h2 class="mb-0 fw-bold text-dark">ایجاد پست جدید</h2>
+                            <p class="text-muted mb-0 small">نظرات و سوالات خود را با دیگران به اشتراک بگذارید</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Card -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4 p-md-5">
+                    <form method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        <!-- Title Field -->
+                        <div class="mb-4">
+                            <label for="title" class="form-label fw-semibold mb-2">
+                                <i class="fas fa-heading text-primary me-2"></i>عنوان پست
+                            </label>
+                            <input 
+                                type="text" 
+                                class="form-control form-control-lg" 
+                                name="title" 
+                                id="title" 
+                                placeholder="عنوان پست خود را وارد کنید..."
+                                required
+                            >
+                            <div class="invalid-feedback">
+                                لطفاً عنوان پست را وارد کنید
+                            </div>
+                        </div>
+
+                        <!-- Content Field -->
+                        <div class="mb-4">
+                            <label for="content" class="form-label fw-semibold mb-2">
+                                <i class="fas fa-align-right text-primary me-2"></i>متن پیام
+                            </label>
+                            <textarea 
+                                class="form-control" 
+                                name="content" 
+                                id="content" 
+                                rows="8" 
+                                placeholder="متن پیام خود را اینجا بنویسید..."
+                                style="resize: vertical; min-height: 200px;"
+                                required
+                            ></textarea>
+                            <div class="invalid-feedback">
+                                لطفاً متن پیام را وارد کنید
+                            </div>
+                            <div class="form-text mt-2">
+                                <i class="fas fa-info-circle me-1"></i>
+                                می‌توانید از متن‌های طولانی استفاده کنید
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex flex-column flex-sm-row gap-3 justify-content-end mt-4">
+                            <a href="{% url 'discussion_app:list' %}" class="btn btn-outline-secondary btn-lg flex-fill flex-sm-grow-0">
+                                <i class="fas fa-times me-2"></i>انصراف
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-lg flex-fill flex-sm-grow-0 shadow-sm">
+                                <i class="fas fa-paper-plane me-2"></i>ارسال پست
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="mb-3">
-        <label for="content" class="form-label">متن پیام</label>
-        <textarea class="form-control" name="content" id="content" rows="4" required></textarea>
-    </div>
-    <button type="submit" class="btn btn-success">ارسال</button>
-</form>
+</div>
+
+<style>
+    .form-control:focus {
+        border-color: #6c63ff;
+        box-shadow: 0 0 0 0.2rem rgba(108, 99, 255, 0.25);
+    }
+    
+    .form-control-lg {
+        font-size: 1.1rem;
+        padding: 0.75rem 1rem;
+    }
+    
+    .card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, #6c63ff 0%, #9a8bff 100%);
+        border: none;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #5a52e5 0%, #8a7be5 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 0.5rem 1rem rgba(108, 99, 255, 0.4) !important;
+    }
+    
+    textarea.form-control {
+        line-height: 1.8;
+    }
+    
+    @media (max-width: 576px) {
+        .card-body {
+            padding: 1.5rem !important;
+        }
+    }
+</style>
+
+<script>
+    // Bootstrap form validation
+    (function() {
+        'use strict';
+        var forms = document.querySelectorAll('.needs-validation');
+        Array.prototype.slice.call(forms).forEach(function(form) {
+            form.addEventListener('submit', function(event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>
 {% endblock %}
+
+{% include 'includes/footer.html' %}

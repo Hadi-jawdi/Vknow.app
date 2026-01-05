@@ -1,8 +1,6 @@
 
 {% extends 'includes/base.html'%}
-
   {%block content%}
-
  <!-- Header / Navbar -->
     <nav class="navbar navbar-expand-sm navbar-light bg-light shadow-sm">
         <div class="container-fluid">
@@ -20,24 +18,22 @@
             <!-- Navbar links -->
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto text-center">
-                    <li class="nav-item"><a class="nav-link" href="/resources/">منابع</a></li>
+
+                    {% if user.is_authenticated %}
+                                        <li class="nav-item"><a class="nav-link" href="/resources/">منابع</a></li>
                     <li class="nav-item"><a class="nav-link" href="/mock-tests/">آزمون‌های آزمایشی</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'groups_app:create_group' %}">گروه‌ها</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'discussion_app:list' %}">بحث و گفتگو</a></li>
-                    {% if user.is_authenticated %}
-                    <li class="nav-item"><a class="nav-link" href="/discussion/">{{ request.user.username }}</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'account_app:dashboard' %}">{{ request.user.username }}</a></li>
                     <li class="nav-item"><a class="nav-link btn btn-primary ms-lg-2 mt-2 mt-lg-0" href="/account/login/">خروج</a></li>
-
-
 
                     {% else %}
 
-                    <li class="nav-item"><a class="nav-link btn btn-primary ms-lg-2 mt-2 mt-lg-0" href="/account/login/">ورود</a></li>
-                    <li class="nav-item"><a class="nav-link btn btn-outline-primary ms-lg-2 mt-2 mt-lg-0" href="/account/register/">ثبت نام</a></li>
+                    <li class="nav-item"><a class="nav-link btn btn-primary ms-lg-2 mt-2 mt-lg-0" href="{% url 'account_app:login_user'%}">ورود</a></li>
+                    <li class="nav-item"><a class="nav-link btn btn-outline-primary ms-lg-2 mt-2 mt-lg-0" href="{% url 'account_app:register_user' %}">ثبت نام</a></li>
                     {% endif %}
                 </ul>
             </div>
         </div>
     </nav>
-
   {%endblock content%}

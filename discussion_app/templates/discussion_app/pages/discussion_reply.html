@@ -1,43 +1,167 @@
-{% include 'includes/header.html'%}
+{% include 'includes/header.html' %}
 
 {% block content %}
-<div class="container my-5">
-    <div class="card shadow-lg rounded-4 p-4">
-        <h2 class="text-primary mb-3">پاسخ به: {{ post.title }}</h2>
-        
-        {% if parent %}
-        <div class="card mb-3 shadow-sm rounded-3 p-3 bg-light">
-            <strong>در پاسخ به:</strong>
-            <p class="mb-0">{{ parent.content }}</p>
-        </div>
-        {% endif %}
-        
-        <form method="post">
-            {% csrf_token %}
-            <div class="mb-3">
-                <label for="content" class="form-label fw-semibold">متن پاسخ</label>
-                <textarea class="form-control" name="content" id="content" rows="4" placeholder="نظر خود را بنویسید..." required></textarea>
+<div class="container my-4 my-md-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-8 col-xl-7">
+            <!-- Header Card -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-primary bg-gradient rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                            <i class="fas fa-reply text-white fs-5"></i>
+                        </div>
+                        <div>
+                            <h2 class="mb-0 fw-bold text-dark">پاسخ به پست</h2>
+                            <p class="text-muted mb-0 small">نظر خود را درباره این پست بنویسید</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <button type="submit" class="btn btn-success btn-lg shadow">ارسال پاسخ</button>
-        </form>
+
+            <!-- Original Post Preview -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-secondary bg-gradient rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                            <i class="fas fa-user text-white"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h5 class="mb-1 fw-bold text-dark">{{ post.title }}</h5>
+                            <small class="text-muted">
+                                <i class="far fa-user me-1"></i>{{ post.user.username }}
+                            </small>
+                        </div>
+                    </div>
+                    <p class="text-muted mb-0" style="line-height: 1.8;">{{ post.content|truncatewords:30 }}</p>
+                </div>
+            </div>
+
+            <!-- Parent Reply (if replying to a reply) -->
+            {% if parent %}
+            <div class="card border-0 shadow-sm mb-4" style="border-right: 4px solid #6c63ff !important;">
+                <div class="card-body p-4 bg-light">
+                    <div class="d-flex align-items-start mb-2">
+                        <i class="fas fa-quote-right text-primary me-2 mt-1"></i>
+                        <div class="flex-grow-1">
+                            <div class="d-flex align-items-center mb-2">
+                                <div class="bg-secondary bg-gradient rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 35px; height: 35px;">
+                                    <i class="fas fa-user text-white small"></i>
+                                </div>
+                                <div>
+                                    <span class="fw-semibold small">{{ parent.user.username }}</span>
+                                    <small class="text-muted d-block">{{ parent.created_at|date:"d F Y - H:i" }}</small>
+                                </div>
+                            </div>
+                            <p class="mb-0 text-dark" style="line-height: 1.7;">{{ parent.content }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Reply Form Card -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4 p-md-5">
+                    <form method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        <div class="mb-4">
+                            <label for="content" class="form-label fw-semibold mb-2">
+                                <i class="fas fa-comment-dots text-primary me-2"></i>متن پاسخ شما
+                            </label>
+                            <textarea 
+                                class="form-control" 
+                                name="content" 
+                                id="content" 
+                                rows="8" 
+                                placeholder="نظر خود را اینجا بنویسید..."
+                                style="resize: vertical; min-height: 200px; line-height: 1.8;"
+                                required
+                            ></textarea>
+                            <div class="invalid-feedback">
+                                لطفاً متن پاسخ خود را وارد کنید
+                            </div>
+                            <div class="form-text mt-2">
+                                <i class="fas fa-lightbulb me-1"></i>
+                                پاسخ شما باید مفید و مرتبط با موضوع باشد
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex flex-column flex-sm-row gap-3 justify-content-end mt-4">
+                            <a href="{% url 'discussion_app:list' %}" class="btn btn-outline-secondary btn-lg flex-fill flex-sm-grow-0">
+                                <i class="fas fa-times me-2"></i>انصراف
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-lg flex-fill flex-sm-grow-0 shadow-sm">
+                                <i class="fas fa-paper-plane me-2"></i>ارسال پاسخ
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
 <style>
+    .form-control:focus {
+        border-color: #6c63ff;
+        box-shadow: 0 0 0 0.2rem rgba(108, 99, 255, 0.25);
+    }
+    
     .card {
-        transition: all 0.2s ease-in-out;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
+    
     .card:hover {
-        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        transform: translateY(-2px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
     }
-    .btn-lg {
-        font-size: 1.1rem;
-        padding: 0.5rem 1.2rem;
+    
+    .btn-primary {
+        background: linear-gradient(135deg, #6c63ff 0%, #9a8bff 100%);
+        border: none;
+        transition: all 0.3s ease;
     }
-    textarea.form-control {
-        resize: none;
+    
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #5a52e5 0%, #8a7be5 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 0.5rem 1rem rgba(108, 99, 255, 0.4) !important;
+    }
+    
+    .btn-outline-secondary:hover {
+        transform: translateY(-1px);
+    }
+    
+    @media (max-width: 576px) {
+        .card-body {
+            padding: 1.5rem !important;
+        }
+        
+        h2 {
+            font-size: 1.5rem;
+        }
     }
 </style>
+
+<script>
+    // Bootstrap form validation
+    (function() {
+        'use strict';
+        var forms = document.querySelectorAll('.needs-validation');
+        Array.prototype.slice.call(forms).forEach(function(form) {
+            form.addEventListener('submit', function(event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>
 {% endblock %}
 
-{% include 'includes/footer.html'%}
+{% include 'includes/footer.html' %}
