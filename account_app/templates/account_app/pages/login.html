@@ -1,70 +1,107 @@
 {% include 'includes/base.html' %}
 
 {% block content %}
-<div class="container py-5">
-  <div class="row justify-content-center">
-    <div class="col-md-6 col-lg-5">
-      
-      <div class="card shadow-sm border-0">
-        <div class="card-body p-4">
+<style>
+  body {
+    background-color: #f8f9fc;
+  }
 
-          <h3 class="text-center mb-3">ورود به حساب کاربری</h3>
-          <p class="text-center text-muted mb-4">
-            خوش آمدید! لطفاً اطلاعات خود را وارد کنید
-          </p>
+  .login-wrapper {
+    min-height: 100vh;
+  }
 
-          <p class="text-center">
-            حساب کاربری ندارید؟
-            <a class="text-danger fw-bold" href="{% url 'account_app:register_user' %}">
-              ثبت‌نام کنید
-            </a>
-          </p>
+  .login-card {
+    border-radius: 16px;
+  }
 
-          {% if error %}
-            <div class="alert alert-danger text-center mt-3">
-              {{ error }}
-            </div>
-          {% endif %}
+  .form-control {
+    border-radius: 10px;
+    padding: 10px 12px;
+  }
 
-          <form action="{% url 'account_app:login_user' %}" method="post" class="mt-4">
-            {% csrf_token %}
+  .btn-login {
+    border-radius: 10px;
+    padding: 10px;
+    font-weight: 600;
+  }
 
-            <div class="mb-3">
-              <label class="form-label">نام کاربری</label>
-              <input
-                type="text"
-                class="form-control"
-                name="username"
-                placeholder="نام کاربری خود را وارد کنید"
-                required
-              />
-            </div>
+  @media (max-width: 576px) {
+    .login-card {
+      padding: 1.5rem !important;
+    }
 
-            <div class="mb-3">
-              <label class="form-label">رمز عبور</label>
-              <input
-                type="password"
-                class="form-control"
-                name="password"
-                placeholder="رمز عبور خود را وارد کنید"
-                required
-              />
-            </div>
+    h3 {
+      font-size: 20px;
+    }
+  }
+</style>
 
-            <div class="d-grid">
-              <button class="btn btn-success btn-lg" type="submit">
-                ورود
-              </button>
-            </div>
-          </form>
+<div class="container login-wrapper d-flex align-items-center justify-content-center py-4">
+  <div class="col-12 col-sm-10 col-md-6 col-lg-4">
 
-          <div class="text-center mt-3">
-            <a href="#" class="text-decoration-none text-danger">
-              رمز عبور را فراموش کرده‌اید؟
-            </a>
-          </div>
+    <div class="card shadow border-0 login-card p-4">
 
+      <!-- Title -->
+      <div class="text-center mb-4">
+        <h3 class="fw-bold">ورود به حساب کاربری</h3>
+        <p class="text-muted small mb-0">
+          برای شرکت در آزمون‌های آزمایشی و گروه‌های درسی وارد شوید
+        </p>
+      </div>
+
+      <!-- Error -->
+      {% if error %}
+        <div class="alert alert-danger text-center">
+          {{ error }}
         </div>
+      {% endif %}
+
+      <!-- Form -->
+      <form action="{% url 'account_app:login_user' %}" method="post" novalidate>
+        {% csrf_token %}
+
+        <div class="mb-3">
+          <label class="form-label">نام کاربری</label>
+          <input
+            type="text"
+            class="form-control"
+            name="username"
+            placeholder="نام کاربری"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">رمز عبور</label>
+          <input
+            type="password"
+            class="form-control"
+            name="password"
+            placeholder="رمز عبور"
+            required
+          />
+        </div>
+
+        <div class="d-grid mt-2">
+          <button class="btn btn-primary btn-login" type="submit">
+            ورود
+          </button>
+        </div>
+      </form>
+
+      <!-- Links -->
+      <div class="text-center mt-4 small">
+        حساب کاربری ندارید؟
+        <a class="fw-bold text-decoration-none"
+           href="{% url 'account_app:register_user' %}">
+          ثبت‌نام
+        </a>
+      </div>
+
+      <div class="text-center mt-2">
+        <a href="#" class="text-muted small text-decoration-none">
+          رمز عبور را فراموش کرده‌اید؟
+        </a>
       </div>
 
     </div>
