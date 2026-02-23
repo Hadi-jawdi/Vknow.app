@@ -1,0 +1,40 @@
+  body {
+    background-color: #fcfeff; /* Reddit background */
+  }
+
+  .post_div {
+    background: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
+
+  .post-title {
+    font-size: 1.1rem;
+    font-weight: 500;
+    border-radius: 6px;
+  }
+
+  #editor {
+    height: 200px; /* smaller height */
+    background: #fff;
+  }
+
+  .ql-toolbar {
+    border-radius: 6px 6px 0 0;
+    background: #f6f7f8;
+  }
+
+  .ql-container {
+    border-radius: 0 0 6px 6px;
+    min-height: 150px;
+  }
+  .btn-sbumit {
+    background-color: #ff4800; 
+    border: none;
+  }
+
+  @media (max-width: 768px) {
+    #editor {
+      height: 250px;
+    }
+  }
