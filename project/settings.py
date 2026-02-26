@@ -35,6 +35,8 @@ INSTALLED_APPS = [
     'resources_app',
     'upload_book_app',
     'groups_app',
+    'about_app',
+    
     
     
     

@@ -15,7 +15,7 @@ def test_email(request):
     subject = 'Test Email from Django'
     message = 'This is a test email to confirm your email setup in Django.'
     from_email = 'Hadijawadi1385@gmail.com'  # Replace with your email address
-    recipient_list = ['1978javadi@gmail.com']  # Replace with the recipient's email address
+    recipient_list = ['hadi.jawdi2006@gmail.com']  # Replace with the recipient's email address
 
     try:
         send_mail(subject, message, from_email, recipient_list, fail_silently=False)
