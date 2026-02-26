@@ -1,0 +1,59 @@
+{% include 'includes/header.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- Hero / Page Title -->
+<section class="bg-primary text-white py-4 mb-4 mt-2">
+  <div class="container text-center">
+    <h1 class="fw-bold">بورسیه‌های تحصیلی</h1>
+    <p class="mb-0">جستجو و مشاهده بورسیه‌های تحصیلی موجود برای دانشجویان افغان</p>
+  </div>
+</section>
+
+<!-- Search Box -->
+<section class="mb-4">
+  <div class="container">
+    <form method="GET" action="">
+      <div class="input-group">
+        <input type="text" class="form-control" name="q" placeholder="جستجوی بورسیه‌ها ..." value="{{ request.GET.q }}">
+        <button class="btn btn-primary" type="submit">
+          <i class="bi bi-search"></i> جستجو
+        </button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- Scholarships List -->
+<section class="pb-5">
+  <div class="container">
+    {% if scholarships %}
+      <div class="row g-4">
+        {% for scholarship in scholarships %}
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="card h-100 shadow-sm">
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title fw-bold"> scholarship.title </h5>
+              <p class="card-text text-muted mb-2"> scholarship.university </p>
+              <p class="card-text small">{{ scholarship.short_description|truncatewords:20 }}</p>
+              <p class="mt-auto">
+                {% if scholarship.is_available %}
+                  <span class="badge bg-success">موجود</span>
+                {% else %}
+                  <span class="badge bg-danger">به اتمام رسیده</span>
+                {% endif %}
+              </p>
+              <a href="" class="btn btn-primary mt-2">مشاهده جزئیات</a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-center text-muted">هیچ بورسیه‌ای یافت نشد.</p>
+    {% endif %}
+  </div>
+</section>
+
+{% endblock content %}
