@@ -36,12 +36,9 @@ INSTALLED_APPS = [
     'upload_book_app',
     'groups_app',
     'about_app',
-    
-    
-    
-    
-    
+    'kankoor_app',
 
+    
 
 ]
 

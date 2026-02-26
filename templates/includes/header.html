@@ -6,7 +6,7 @@
 >
   <div class="container py-2">
     <!-- Logo -->
-    <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
+    <a class="navbar-brand d-flex align-items-center" href="">
       <img
         src="{% static 'images/logo.png' %}"
         alt="لوگو"
@@ -20,37 +20,34 @@
     <!-- Center Nav Links -->
     <ul class="navbar-nav mx-auto">
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'home' %}">خانه</a>
-      </li>
-      <li class="nav-item">
         <a
           class="nav-link {% if request.resolver_match.url_name == 'scholarships_page' %}text-primary fw-semibold{% else %}text-dark{% endif %}"
           href=""
         >
-       بورسیه‌ها
+          بورسیه‌ها
         </a>
       </li>
 
       <li class="nav-item">
-        <a class="nav-link" href="">آزمون</a>
+        <a class="nav-link" href="{% url 'kankoor_app:kankoor_test'%}">امتحان کانکور</a>
+      </li> 
+
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'discussion_app:list'%}">گفتگو</a>
       </li>
 
       <li class="nav-item">
-        <a class="nav-link" href="">انجمن</a>
-      </li>
-
-      <li class="nav-item">
-        <a class="nav-link" href="">منابع</a>
+        <a class="nav-link" href="{% url 'resources_app:resources'%}">منابع</a>
       </li>
     </ul>
 
     <!-- Right Side Auth -->
     <div class="d-flex align-items-center">
       {% if user.is_authenticated %}
-      <a href="{% url 'account_app:dashboard' %}" class="nav-link me-3">
+      <a href="{% url 'account_app:dashboard' %}"" class="nav-link me-3">
         {{ request.user.username }}
       </a>
-      <a href="" class="btn btn-outline-primary btn-sm">خروج</a>
+      <a href="{% url 'account_app:logout_user' %}" class="btn btn-outline-primary btn-sm">خروج</a>
       {% else %}
       <a
         href="{% url 'account_app:login_user' %}"
@@ -73,29 +70,28 @@
 <div
   class="fixed-bottom bg-white border-top d-flex justify-content-around py-2 d-lg-none shadow-sm"
 >
-  <a href="{% url 'home' %}" class="text-center text-decoration-none text-dark">
+  <a href="" class="text-center text-decoration-none text-dark">
     <div><i class="bi bi-house-fill"></i></div>
     <small>بورسیه ها</small>
   </a>
 
-
-  <a href="" class="text-center text-decoration-none text-secondary">
+  <a href= "{% url 'kankoor_app:kankoor_test'%}" class="text-center text-decoration-none text-secondary">
     <div><i class="bi bi-journal-text"></i></div>
     <small>کانکور</small>
   </a>
 
-  <a href="" class="text-center text-decoration-none text-secondary">
+  <a href="{% url 'discussion_app:list'%}" class="text-center text-decoration-none text-secondary">
     <div><i class="bi bi-chat-dots-fill"></i></div>
     <small>گفتگو</small>
   </a>
 
-  <a href="" class="text-center text-decoration-none text-danger">
+  <a href= "{% url 'resources_app:resources'%}" class="text-center text-decoration-none text-danger">
     <div><i class="bi bi-book-fill"></i></div>
     <small>منابع</small>
   </a>
 
   {% if user.is_authenticated %}
-  <a href="" class="text-center text-decoration-none text-danger">
+  <a href="{% url 'account_app:dashboard' %}" class="text-center text-decoration-none text-danger">
     <div><i class="bi bi-person-fill"></i></div>
     <small>پروفایل</small>
   </a>

@@ -13,6 +13,8 @@ urlpatterns = [
     path('resources/', include("resources_app.urls")),
     path('upload/', include("upload_book_app.urls")),
     path('group/', include("groups_app.urls")),
+    path('test/', include("kankoor_app.urls")),
+
     
 ]
 

@@ -15,7 +15,7 @@
   }
 
   #editor {
-    height: 200px; /* smaller height */
+    height: 100px; /* smaller height */
     background: #fff;
   }
 
@@ -35,6 +35,6 @@
 
   @media (max-width: 768px) {
     #editor {
-      height: 250px;
+      height: 80px;
     }
   }

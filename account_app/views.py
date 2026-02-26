@@ -64,3 +64,9 @@ def dashboard(request):
 
     return render(request, "account_app/pages/dashboard.html")
     
+from django.contrib.auth import logout
+
+
+def logout_user(request):
+    logout(request)
+    return redirect('home')  # or wherever you want
