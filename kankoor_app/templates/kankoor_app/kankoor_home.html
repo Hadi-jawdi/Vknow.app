@@ -1,0 +1,160 @@
+{% include "includes/header.html" %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'kankoor_app/home.css' %}">
+
+{% block content %}
+
+  
+
+<div class="container py-2" dir="rtl">
+
+  <!-- Hero -->
+  <div class="kankor-hero text-white text-center fade-up">
+    <span class="badge bg-primary bg-opacity-25 text-white border border-primary border-opacity-25 mb-3 px-3 py-2 rounded-pill">
+      🎓 بانک سوالات کانکور افغانستان
+    </span>
+    <h1 class="fw-bold fs-2 mb-2">آزمون آنلاین کانکور</h1>
+    <p class="text-white-50 mb-4">بیش از ۴۰۰۰ سوال از تمام مضامین — رایگان و بدون محدودیت</p>
+
+    <!-- Stats -->
+    <div class="row g-3 justify-content-center mt-2">
+      <div class="col-6 col-md-3">
+        <div class="stat-card">
+          <span class="stat-number">۴۰۳۲</span>
+          <span class="stat-label">سوال در بانک</span>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-card">
+          <span class="stat-number">۶</span>
+          <span class="stat-label">مضمون</span>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-card">
+          <span class="stat-number">۳</span>
+          <span class="stat-label">سطح دشواری</span>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-card">
+          <span class="stat-number">∞</span>
+          <span class="stat-label">آزمون رایگان</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Setup Card -->
+  <div class="row justify-content-center fade-up delay-1">
+    <div class="col-12 col-md-8 col-lg-6">
+      <div class="card setup-card p-4">
+
+        <div class="d-flex align-items-center gap-2 mb-4">
+          <div class="bg-primary bg-opacity-10 rounded-3 p-2">
+            <i class="bi bi-sliders text-primary fs-5"></i>
+          </div>
+          <h5 class="mb-0 fw-bold text-dark">تنظیمات آزمون</h5>
+        </div>
+
+        <form action="{% url 'kankoor_app:start_test' %}" method="get">
+
+          <!-- Subject -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-secondary small">
+              <i class="bi bi-book me-1"></i> مضمون
+            </label>
+            <select name="subject" class="form-select">
+              <option value="">📚 همه مضامین</option>
+              {% for subject in subjects %}
+              <option value="{{ subject }}">{{ subject }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <!-- Difficulty -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-secondary small">
+              <i class="bi bi-bar-chart me-1"></i> سطح دشواری
+            </label>
+            <select name="difficulty" class="form-select">
+              <option value="">🎯 همه سطوح</option>
+              <option value="easy">🟢 آسان</option>
+              <option value="medium">🟡 متوسط</option>
+              <option value="hard">🔴 سخت</option>
+            </select>
+          </div>
+
+          <!-- Count -->
+          <div class="mb-4">
+            <label class="form-label fw-semibold text-secondary small">
+              <i class="bi bi-hash me-1"></i> تعداد سوالات
+            </label>
+            <div class="row g-2">
+              <div class="col-3">
+                <input type="radio" class="btn-check" name="count" id="c10" value="10">
+                <label class="btn btn-outline-primary w-100 rounded-3" for="c10">۱۰</label>
+              </div>
+              <div class="col-3">
+                <input type="radio" class="btn-check" name="count" id="c20" value="20" checked>
+                <label class="btn btn-outline-primary w-100 rounded-3" for="c20">۲۰</label>
+              </div>
+              <div class="col-3">
+                <input type="radio" class="btn-check" name="count" id="c30" value="30">
+                <label class="btn btn-outline-primary w-100 rounded-3" for="c30">۳۰</label>
+              </div>
+              <div class="col-3">
+                <input type="radio" class="btn-check" name="count" id="c50" value="50">
+                <label class="btn btn-outline-primary w-100 rounded-3" for="c50">۵۰</label>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-start btn-primary w-100 text-white py-2">
+            <i class="bi bi-play-fill me-2"></i> شروع آزمون
+          </button>
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Results -->
+  {% if recent_results %}
+  <div class="row justify-content-center mt-5 fade-up delay-2">
+    <div class="col-12 col-md-8 col-lg-6">
+
+      <h5 class="section-title mb-4">نتایج اخیر شما</h5>
+
+      {% for result in recent_results %}
+      <div class="list-group-item result-item d-flex align-items-center gap-3 p-3">
+
+        <div class="score-circle">
+          {{ result.percentage }}%
+        </div>
+
+        <div class="flex-grow-1">
+          <div class="d-flex align-items-center gap-2 mb-1">
+            <span class="fw-semibold text-dark">{{ result.subject }}</span>
+            {% if result.difficulty %}
+            <span class="badge rounded-pill badge-{{ result.difficulty }} small">
+              {{ result.difficulty }}
+            </span>
+            {% endif %}
+          </div>
+          <small class="text-muted">{{ result.taken_at|date:"Y/m/d — H:i" }}</small>
+        </div>
+
+        <div class="text-end">
+          <span class="fw-bold fs-5 text-primary">{{ result.score }}</span>
+          <span class="text-muted">/{{ result.total }}</span>
+        </div>
+
+      </div>
+      {% endfor %}
+
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

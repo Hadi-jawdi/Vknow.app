@@ -1,9 +1,126 @@
-{% include 'includes/header.html' %}
+{% include "includes/header.html" %} {% load static %} {% block content %}
+<div class="container py-4" dir="rtl">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0">آزمون {{ subject }}</h4>
+    <div class="d-flex align-items-center gap-3">
+      <span class="text-muted">{{ count }} سوال</span>
+      <div class="badge bg-danger fs-6 px-3 py-2" id="timer">--:--</div>
+    </div>
+  </div>
 
+  <!-- Progress Bar -->
+  <div class="progress mb-4" style="height: 6px">
+    <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+  </div>
 
-{% block content %}
+  <!-- Questions -->
+  <form id="test-form">
+    {% csrf_token %} {% for q in questions %}
+    <div
+      class="card border shadow-sm mb-4 p-4 question-card"
+      id="q-{{ forloop.counter }}"
+    >
+      <div class="d-flex justify-content-between mb-3">
+        <span class="badge bg-primary">سوال {{ forloop.counter }}</span>
+        <span class="badge bg-light text-dark">{{ q.subject }}</span>
+      </div>
+      <p class="fw-semibold mb-3">{{ q.question }}</p>
+      <div class="d-flex flex-column gap-2">
+        {% for option in q.options %}
+        <label
+          class="option-label d-flex align-items-center gap-2 p-2 rounded border cursor-pointer"
+        >
+          <input
+            type="radio"
+            name="q_{{ q.id }}"
+            value="{{ forloop.counter }}"
+            class="option-radio"
+            hidden
+          />
+          <span class="option-marker">{{ forloop.counter }}</span>
+          <span>{{ option }}</span>
+        </label>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
 
-<div class="container mt-3">
-    <h1>TEst page  </h1>
+    <!-- Submit Button -->
+    <div class="text-center mt-4 mb-5">
+      <button
+        type="button"
+        id="submit-btn"
+        class="btn btn-success px-5 py-2 fw-bold fs-5"
+      >
+        ثبت پاسخ‌ها
+      </button>
+    </div>
+  </form>
+
+  <!-- Results Modal -->
+  <div
+    class="modal fade"
+    id="resultsModal"
+    tabindex="-1"
+    data-bs-backdrop="static"
+  >
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold">نتیجه آزمون</h5>
+        </div>
+        <div class="modal-body" id="results-body"></div>
+        <div class="modal-footer">
+          <a href="{% url 'kankoor_app:kankoor_home' %}" class="btn btn-primary"
+            >آزمون جدید</a
+          >
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-{% endblock content %}
+
+<style>
+  .option-label {
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .option-label:hover {
+    background: #f0f4ff;
+  }
+  .option-label.selected {
+    background: #e0e9ff;
+    border-color: #4a7aff !important;
+  }
+  .option-label.correct {
+    background: #d4edda;
+    border-color: #28a745 !important;
+  }
+  .option-label.wrong {
+    background: #f8d7da;
+    border-color: #dc3545 !important;
+  }
+  .option-marker {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #eee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    flex-shrink: 0;
+  }
+</style>
+
+<script>
+  const questionsData = {{ questions_json|safe }};
+  const timerMinutes = {{ timer_minutes }};
+  const subject = "{{ subject }}";
+  const difficulty = "{{ difficulty }}";
+  const submitUrl = "{% url 'kankoor_app:submit_test' %}";
+
+</script>
+<script src="{% static 'kankoor_app/test.js' %}"></script>
+{% endblock %}
