@@ -1,0 +1,269 @@
+  :root {
+    --gold: #c9a84c;
+    --gold-lt: #f0d98a;
+    --navy: #0d1b35;
+    --navy-mid: #162040;
+    --navy-lt: #1e2e52;
+    --cream: #f7f5f0;
+    --muted: #8a94a8;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body,
+  .sch-page {
+    font-family: "Vazirmatn", sans-serif !important;
+    direction: rtl;
+    text-align: right;
+  }
+
+  /* ── Hero background ── */
+  .sch-page {
+    background: linear-gradient(160deg, #0d1b35 0%, #162040 60%, #1a2d50 100%);
+    min-height: 100vh;
+    padding-bottom: 120px;
+  }
+
+  .sch-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      ellipse 70% 60% at 50% 0%,
+      rgba(201, 168, 76, 0.13),
+      transparent
+    );
+    pointer-events: none;
+  }
+
+  /* ── Search input ── */
+  .sch-search {
+    background: rgba(255, 255, 255, 0.06) !important;
+    border: 1.5px solid rgba(201, 168, 76, 0.35) !important;
+    border-radius: 50px !important;
+    padding: 14px 54px 14px 24px !important;
+    color: var(--cream) !important;
+    font-family: "Vazirmatn", sans-serif !important;
+    font-size: 1rem !important;
+    backdrop-filter: blur(8px);
+    transition:
+      border-color 0.25s,
+      box-shadow 0.25s,
+      background 0.25s !important;
+    direction: rtl;
+  }
+  .sch-search::placeholder {
+    color: var(--muted) !important;
+  }
+  .sch-search:focus {
+    border-color: var(--gold) !important;
+    background: rgba(255, 255, 255, 0.09) !important;
+    box-shadow: 0 0 0 4px rgba(201, 168, 76, 0.13) !important;
+  }
+
+  .sch-search-icon {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gold);
+    font-size: 1.15rem;
+    pointer-events: none;
+  }
+
+  /* ── Spinner ── */
+  .sch-spinner {
+    display: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(201, 168, 76, 0.3);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  @keyframes spin {
+    to {
+      transform: translateY(-50%) rotate(360deg);
+    }
+  }
+  .sch-spinner.active {
+    display: block;
+  }
+  .sch-spinner.active ~ .sch-search-icon {
+    display: none;
+  }
+
+  /* ── Divider label ── */
+  .sch-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 48px 0 24px;
+  }
+  .sch-divider__line {
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+  }
+  .sch-divider__label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .sch-divider__badge {
+    background: rgba(201, 168, 76, 0.15);
+    color: var(--gold);
+    border: 1px solid rgba(201, 168, 76, 0.28);
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 2px 10px;
+  }
+
+  /* ── Card ── */
+  .sch-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.09) !important;
+    border-radius: 14px !important;
+    transition:
+      transform 0.22s,
+      border-color 0.22s,
+      background 0.22s;
+    animation: fadeUp 0.4s ease both;
+    cursor: default;
+  }
+  .sch-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(201, 168, 76, 0.4) !important;
+    background: rgba(255, 255, 255, 0.07);
+  }
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .sch-card__title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--cream);
+    line-height: 1.4;
+  }
+  .sch-card__desc {
+    font-size: 0.83rem;
+    color: var(--muted);
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .sch-card__link {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--gold) !important;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .sch-card__link:hover {
+    color: var(--gold-lt) !important;
+  }
+  .sch-card__footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    padding-top: 10px;
+    margin-top: 4px;
+  }
+  .sch-card__source {
+    font-size: 0.7rem;
+    color: var(--muted);
+  }
+  .sch-card__deadline {
+    font-size: 0.7rem;
+    color: var(--gold);
+    font-weight: 600;
+  }
+
+  /* tag pills */
+  .tag-country {
+    background: rgba(201, 168, 76, 0.12);
+    color: var(--gold);
+    border: 1px solid rgba(201, 168, 76, 0.22);
+    border-radius: 20px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 2px 10px;
+    letter-spacing: 0.05em;
+  }
+  .tag-level {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--muted);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 2px 10px;
+  }
+
+  /* empty / error */
+  .sch-empty {
+    text-align: center;
+    padding: 48px 20px;
+    color: var(--muted);
+  }
+  .sch-empty i {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: 10px;
+    color: rgba(201, 168, 76, 0.3);
+  }
+
+  .sch-error-box {
+    background: rgba(220, 38, 38, 0.1);
+    border: 1px solid rgba(220, 38, 38, 0.28);
+    border-radius: 10px;
+    padding: 12px 18px;
+    color: #f87171;
+    font-size: 0.85rem;
+    text-align: center;
+  }
+
+  /* filter chips */
+  .filter-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 50px;
+    padding: 6px 16px;
+    font-size: 0.78rem;
+    color: var(--muted);
+    cursor: pointer;
+    transition:
+      background 0.2s,
+      border-color 0.2s,
+      color 0.2s;
+    font-family: "Vazirmatn", sans-serif;
+  }
+  .filter-chip:hover,
+  .filter-chip.active {
+    background: rgba(201, 168, 76, 0.15);
+    border-color: rgba(201, 168, 76, 0.4);
+    color: var(--gold);
+  }
+  .filter-chip.active {
+    font-weight: 600;
+  }
