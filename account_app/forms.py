@@ -1,16 +1,8 @@
-from django import forms
-# from .models import UserProfile
-from django import forms
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
-# for registering user with email 
-from django import forms
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
 
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from .models import Profile
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -70,29 +62,34 @@ class CustomUserCreationForm(UserCreationForm):
 
 
 
-# # class UserProfileForm(forms.ModelForm):
-#     class Meta:
-#         model = UserProfile
-#         fields = ['phone_number','address']
-#         widgets = {
-           
-#             'phone_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your Phone_Number'}),
-#             'address': forms.Textarea(attrs={'class': 'form-control',  'placeholder': 'Your Address'}),
-#         }
-#     # for validating the form
-#     def clean(self):
-#         cleaned_data = super().clean()
-#         phone_number = cleaned_data.get('phone_number')
-#         address = cleaned_data.get('address')
+class ProfileUpdateForm(forms.ModelForm):
+    first_name = forms.CharField(max_length=50, required=False, label='نام')
+    last_name = forms.CharField(max_length=50, required=False, label='نام خانوادگی')
 
-#         if phone_number is None or len(phone_number) < 10:
-#                  self.add_error('phone_number', "Enter a valid phone number without the country code.")
+    class Meta:
+        model = Profile
+        fields = ['profile_picture', 'bio']
+        labels = {
+            'profile_picture': 'تصویر پروفایل',
+            'bio': 'درباره من',
+        }
+        widgets = {
+            'bio': forms.Textarea(attrs={'rows': 4}),
+        }
 
-            
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        if self.user:
+            self.fields['first_name'].initial = self.user.first_name
+            self.fields['last_name'].initial = self.user.last_name
 
-#         if address is None:
-#                     self.add_error('address', "Enter your address.")
-
-            
-
-#         return cleaned_data
+    def save(self, commit=True):
+        profile = super().save(commit=False)
+        if self.user:
+            self.user.first_name = self.cleaned_data['first_name']
+            self.user.last_name = self.cleaned_data['last_name']
+            self.user.save()
+        if commit:
+            profile.save()
+        return profile

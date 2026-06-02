@@ -1,5 +1,6 @@
 # Ignore virtual environment
 venv/
+.env/
 1.0.0/
 db.sqlite3/
 media/

@@ -3,11 +3,15 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render,redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login,logout,authenticate
-# from.forms import UserProfileForm
 from django.http import HttpResponse
 from django.core.mail import send_mail
 from .forms import CustomUserCreationForm
 from django.http import HttpResponse
+from django.contrib.auth import logout
+
+from .models import Profile
+from .forms import ProfileUpdateForm
+
 
 
 #for sending email to user when user is registering 
@@ -64,9 +68,34 @@ def dashboard(request):
 
     return render(request, "account_app/pages/dashboard.html")
     
-from django.contrib.auth import logout
-
-
 def logout_user(request):
     logout(request)
-    return redirect('home')  # or wherever you want
+    return redirect('home')
+
+
+
+
+@login_required
+def profile_view(request):
+    # create profile if it doesn't exist
+    profile, created = Profile.objects.get_or_create(user=request.user)
+
+    if request.method == 'POST':
+        form = ProfileUpdateForm(
+            request.POST,
+            request.FILES,
+            instance=profile,
+            user=request.user
+        )
+        if form.is_valid():
+            form.save()
+            
+            return redirect('account_app:profile')
+    else:
+        form = ProfileUpdateForm(instance=profile, user=request.user)
+
+    return render(request, 'account_app/pages/profile.html', {
+        'form': form,
+        'profile': profile,
+    })
+

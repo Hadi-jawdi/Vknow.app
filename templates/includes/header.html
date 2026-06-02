@@ -14,7 +14,7 @@
         height="40"
         class="me-2 img-fluid"
       />
-      <span class="fw-bold">KankoorHub</span>
+      <span class="fw-bold">VKnow</span>
     </a>
 
     <!-- Center Nav Links -->
@@ -22,14 +22,13 @@
       <li class="nav-item">
         <a
           class="nav-link {% if request.resolver_match.url_name == 'scholarships_page' %}text-primary fw-semibold{% else %}text-dark{% endif %}"
-          href=""
-        >
+          href="{% url 'scholarship_app:scholarships'%}">
           بورسیه‌ها
         </a>
       </li>
 
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'kankoor_app:kankoor_test'%}">امتحان کانکور</a>
+        <a class="nav-link" href="{% url 'kankoor_app:kankoor_home'%}">امتحان کانکور</a>
       </li> 
 
       <li class="nav-item">
@@ -75,7 +74,7 @@
     <small>بورسیه ها</small>
   </a>
 
-  <a href= "{% url 'kankoor_app:kankoor_test'%}" class="text-center text-decoration-none text-secondary">
+  <a href= "{% url 'kankoor_app:kankoor_home'%}" class="text-center text-decoration-none text-secondary">
     <div><i class="bi bi-journal-text"></i></div>
     <small>کانکور</small>
   </a>
@@ -89,20 +88,25 @@
     <div><i class="bi bi-book-fill"></i></div>
     <small>منابع</small>
   </a>
-
-  {% if user.is_authenticated %}
-  <a href="{% url 'account_app:dashboard' %}" class="text-center text-decoration-none text-danger">
-    <div><i class="bi bi-person-fill"></i></div>
-    <small>پروفایل</small>
-  </a>
-  {% else %}
-  <a
-    href="{% url 'account_app:login_user' %}"
-    class="text-center text-decoration-none text-dark"
-  >
-    <div><i class="bi bi-key-fill"></i></div>
-    <small>ورود</small>
-  </a>
-  {% endif %}
+{% if user.is_authenticated %}
+<a href="{% url 'account_app:dashboard' %}" class="text-center text-decoration-none text-danger">
+  <div>
+    {% if user.profile.profile_picture %}
+      <img src="{{ user.profile.profile_picture.url }}"
+           width="28" height="28"
+           style="border-radius: 50%; object-fit: cover; border: 2px solid #dc3545;"
+           alt="profile">
+    {% else %}
+      <i class="bi bi-person-fill"></i>
+    {% endif %}
+  </div>
+  <small>پروفایل</small>
+</a>
+{% else %}
+<a href="{% url 'account_app:login_user' %}" class="text-center text-decoration-none text-dark">
+  <div><i class="bi bi-key-fill"></i></div>
+  <small>ورود</small>
+</a>
+{% endif %}
 </div>
 {% endblock content %}

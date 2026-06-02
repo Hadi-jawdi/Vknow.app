@@ -4,35 +4,8 @@
 {% block content %}
 <div class="container-fluid py-5">
 
-<section class="bg-primary text-white py-5">
-  <div class="container text-center">
-    <h1 class="fw-bold mb-3">
-      KankoorHub — 
-      <span id="dynamic-text" class="fw-bold"></span>
-    </h1>
-   
-  </div>
-</section>
 
 
-<script>
-  const words = ["بورسیه‌ها", "آزمون‌ها", "انجمن", "منابع"];
-  let i = 0;
-  const dynamicText = document.getElementById("dynamic-text");
 
-  function rotateText() {
-    dynamicText.classList.add("fade-out");
-    setTimeout(() => {
-      dynamicText.textContent = words[i];
-      dynamicText.classList.remove("fade-out");
-      dynamicText.classList.add("fade-in");
-      i = (i + 1) % words.length;
-      setTimeout(() => dynamicText.classList.remove("fade-in"), 800);
-    }, 500);
-  }
-
-  dynamicText.textContent = words[0];
-  setInterval(rotateText, 3000);
-</script>
 {% endblock content %}
 

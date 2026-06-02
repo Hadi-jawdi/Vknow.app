@@ -1,0 +1,145 @@
+{% include 'includes/header.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  .profile-card {
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+  }
+
+  .profile-pic-wrapper {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 16px;
+  }
+
+  .profile-pic {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #e9ecef;
+  }
+
+  .profile-pic-placeholder {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0d6efd, #0056d2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: white;
+    font-weight: 700;
+    border: 4px solid #e9ecef;
+  }
+
+  .form-control, .form-select {
+    border-radius: 10px;
+    padding: 10px 12px;
+    border: 1.5px solid #e0e7ef;
+    transition: border-color 0.2s;
+  }
+
+  .form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 3px rgba(13,110,253,0.1);
+  }
+
+  .btn-save {
+    border-radius: 10px;
+    padding: 10px;
+    font-weight: 600;
+  }
+
+  .section-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+</style>
+
+<div class="container py-5" dir="rtl">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+      <div class="card profile-card p-4">
+
+        <!-- Profile Picture -->
+        <div class="text-center mb-4">
+          <div class="profile-pic-wrapper">
+            {% if profile.profile_picture %}
+              <img src="{{ profile.profile_picture.url }}" class="profile-pic" alt="profile">
+            {% else %}
+              <div class="profile-pic-placeholder">
+                {{ request.user.username|first|upper }}
+              </div>
+            {% endif %}
+          </div>
+          <h5 class="fw-bold mb-0">{{ request.user.username }}</h5>
+          <small class="text-muted">{{ request.user.email }}</small>
+        </div>
+
+        <!-- Success Message -->
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-success text-center">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+
+        <!-- Form -->
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+
+          <div class="section-label">اطلاعات شخصی</div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-6">
+              <label class="form-label fw-semibold">نام</label>
+              <input type="text" name="first_name"
+                     value="{{ form.first_name.value|default:'' }}"
+                     class="form-control" placeholder="نام">
+            </div>
+            <div class="col-6">
+              <label class="form-label fw-semibold">نام خانوادگی</label>
+              <input type="text" name="last_name"
+                     value="{{ form.last_name.value|default:'' }}"
+                     class="form-control" placeholder="نام خانوادگی">
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">درباره من</label>
+            <textarea name="bio" class="form-control" rows="4"
+                      placeholder="چند جمله درباره خودتان بنویسید...">{{ form.bio.value|default:'' }}</textarea>
+          </div>
+
+          <div class="section-label mt-4">تصویر پروفایل</div>
+
+          <div class="mb-4">
+            <input type="file" name="profile_picture" class="form-control" accept="image/*">
+            <small class="text-muted">فرمت‌های مجاز: JPG، PNG — حداکثر ۲ مگابایت</small>
+          </div>
+
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary btn-save">
+              <i class="bi bi-check-lg me-2"></i> ذخیره تغییرات
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% include 'includes/footer.html' %}
+{% endblock content %}

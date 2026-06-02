@@ -14,9 +14,13 @@ urlpatterns = [
     path('upload/', include("upload_book_app.urls")),
     path('group/', include("groups_app.urls")),
     path('test/', include("kankoor_app.urls")),
+    path('scholarships/', include('scholarship_app.urls')),
 
+    #social login
+    path('accounts/', include('allauth.urls')),
     
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
