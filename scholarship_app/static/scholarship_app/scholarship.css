@@ -21,7 +21,7 @@
 
   /* ── Hero background ── */
   .sch-page {
-    background: linear-gradient(160deg, #0d1b35 0%, #162040 60%, #1a2d50 100%);
+    background: linear-gradient(160deg, #0d1b35 0%, #162040 60%, #1a2d50 100%); 
     min-height: 100vh;
     padding-bottom: 120px;
   }
@@ -30,11 +30,11 @@
     content: "";
     position: absolute;
     inset: 0;
-    background: radial-gradient(
+    /* background: radial-gradient(
       ellipse 70% 60% at 50% 0%,
       rgba(201, 168, 76, 0.13),
       transparent
-    );
+    ); */
     pointer-events: none;
   }
 

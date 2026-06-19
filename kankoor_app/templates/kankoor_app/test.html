@@ -25,7 +25,10 @@
         <span class="badge bg-primary">سوال {{ forloop.counter }}</span>
         <span class="badge bg-light text-dark">{{ q.subject }}</span>
       </div>
-      <p class="fw-semibold mb-3">{{ q.question }}</p>
+
+      <!-- ✅ removed $$ $$ wrapper, added class -->
+      <p class="fw-semibold mb-3 math-text">{{ q.question }}</p>
+
       <div class="d-flex flex-column gap-2">
         {% for option in q.options %}
         <label
@@ -39,7 +42,8 @@
             hidden
           />
           <span class="option-marker">{{ forloop.counter }}</span>
-          <span>{{ option }}</span>
+          <!-- ✅ removed $$ $$ wrapper, added class -->
+          <span class="math-text">{{ option }}</span>
         </label>
         {% endfor %}
       </div>
@@ -120,7 +124,31 @@
   const subject = "{{ subject }}";
   const difficulty = "{{ difficulty }}";
   const submitUrl = "{% url 'kankoor_app:submit_test' %}";
-
 </script>
 <script src="{% static 'kankoor_app/test.js' %}"></script>
+
+<script>
+  // ✅ Smart KaTeX renderer — only touches elements that contain LaTeX
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".math-text").forEach(function (el) {
+      const text = el.textContent.trim();
+
+      // Has LaTeX symbols → render with KaTeX
+      if (/[\\^_{}\$]/.test(text)) {
+        try {
+          katex.render(text, el, {
+            throwOnError: false,
+            displayMode: false,   // inline by default
+            output: "html"
+          });
+        } catch (e) {
+          // If KaTeX fails, leave original text untouched
+          el.textContent = text;
+        }
+      }
+      // Pure Persian/text → leave completely alone ✅
+    });
+  });
+</script>
+
 {% endblock %}

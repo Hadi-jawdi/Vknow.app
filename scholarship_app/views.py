@@ -23,5 +23,5 @@ class ScholarshipSearchAPIView(View):
             return JsonResponse({'error': 'کوئری خالی است'}, status=400)
 
         results = search_scholarships(query)
-        print(results)
+        print("this is the results", results)
         return JsonResponse({'results': results})

@@ -8,7 +8,6 @@ from django.core.mail import send_mail
 from .forms import CustomUserCreationForm
 from django.http import HttpResponse
 from django.contrib.auth import logout
-
 from .models import Profile
 from .forms import ProfileUpdateForm
 

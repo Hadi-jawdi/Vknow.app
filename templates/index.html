@@ -2,10 +2,396 @@
 {% include 'includes/header.html' %}
 
 {% block content %}
-<div class="container-fluid py-5">
+
+  <style>
+    body {
+      font-family: 'Vazirmatn', sans-serif;
+      background: #f7f9f8;
+      color: #1a2e24;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(140deg, #0a3d2e 0%, #1a6644 60%, #0f4a32 100%);
+      padding: 80px 0 70px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 30% 60%, rgba(200,150,12,.15) 0%, transparent 55%),
+                  radial-gradient(ellipse at 75% 20%, rgba(46,158,104,.18) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 14px;
+    }
+    .hero h1 span { color: #f0b429; }
+    .hero p {
+      color: rgba(255,255,255,.72);
+      font-size: 1.05rem;
+      line-height: 1.8;
+      max-width: 500px;
+      margin: 0 auto 32px;
+    }
+    .btn-hero {
+      background: linear-gradient(135deg, #c8960c, #f0b429);
+      color: #0a3d2e;
+      border: none;
+      padding: 13px 36px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 1rem;
+      font-family: 'Vazirmatn', sans-serif;
+      cursor: pointer;
+      transition: transform .25s, box-shadow .25s;
+      box-shadow: 0 4px 20px rgba(200,150,12,.4);
+    }
+    .btn-hero:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(200,150,12,.5); }
+
+    /* ── STATS ROW ── */
+    .stats-row {
+      background: #fff;
+      border-bottom: 1px solid #e2ede7;
+      padding: 28px 0;
+    }
+    .stat-item { text-align: center; }
+    .stat-item .num { font-size: 1.8rem; font-weight: 900; color: #1a6644; display: block; }
+    .stat-item .lbl { font-size: .82rem; color: #7a9585; }
+
+    /* ── SECTION COMMONS ── */
+    section { padding: 64px 0; }
+    .sec-title {
+      font-size: 1.55rem;
+      font-weight: 900;
+      color: #0a3d2e;
+      margin-bottom: 6px;
+    }
+    .sec-sub {
+      color: #7a9585;
+      font-size: .92rem;
+      margin-bottom: 32px;
+    }
+
+    /* ── FEATURE CARDS ── */
+    .feat-card {
+      background: #fff;
+      border: 1px solid #ddeae2;
+      border-radius: 16px;
+      padding: 28px 22px;
+      height: 100%;
+      transition: transform .25s, box-shadow .25s, border-color .25s;
+    }
+    .feat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 32px rgba(26,102,68,.12);
+      border-color: #2e9e68;
+    }
+    .feat-icon {
+      font-size: 2rem;
+      width: 56px; height: 56px;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px;
+    }
+    .feat-card h5 { font-size: 1rem; font-weight: 800; margin-bottom: 8px; color: #0a3d2e; }
+    .feat-card p  { font-size: .87rem; color: #7a9585; line-height: 1.75; margin: 0; }
+
+    /* ── TEST CARDS ── */
+    .test-card {
+      background: #fff;
+      border: 1px solid #ddeae2;
+      border-radius: 14px;
+      padding: 20px;
+      transition: transform .25s, box-shadow .25s;
+    }
+    .test-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,.08); }
+    .test-card h6 { font-weight: 800; font-size: .95rem; color: #0a3d2e; margin-bottom: 8px; }
+    .test-meta span { font-size: .78rem; color: #7a9585; margin-left: 12px; }
+    .badge-free { background: #edf7f0; color: #1a6644; font-size: .72rem; font-weight: 700; padding: 3px 10px; border-radius: 50px; }
+    .btn-test {
+      background: #1a6644; color: #fff; border: none;
+      border-radius: 9px; padding: 9px 0; width: 100%;
+      font-family: 'Vazirmatn', sans-serif; font-weight: 700; font-size: .88rem;
+      cursor: pointer; transition: background .2s;
+      margin-top: 14px;
+    }
+    .btn-test:hover { background: #0a3d2e; }
+
+    /* ── SCHOLARSHIP ── */
+    .sch-card {
+      background: #fff;
+      border: 1px solid #ddeae2;
+      border-radius: 14px;
+      padding: 18px 20px;
+      display: flex; align-items: center; gap: 14px;
+      transition: transform .25s, border-color .25s;
+    }
+    .sch-card:hover { transform: translateX(-4px); border-color: #c8960c; }
+    .sch-flag { font-size: 2rem; }
+    .sch-card h6 { font-weight: 800; font-size: .92rem; margin-bottom: 3px; color: #0a3d2e; }
+    .sch-card p  { font-size: .78rem; color: #7a9585; margin: 0 0 6px; }
+    .sch-tags span {
+      display: inline-block;
+      background: #f0f8f3; color: #1a6644;
+      border-radius: 50px; padding: 2px 9px;
+      font-size: .7rem; font-weight: 600;
+      margin-left: 4px;
+    }
+
+    /* ── Q&A ── */
+    .qa-item {
+      background: #fff;
+      border: 1px solid #ddeae2;
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .qa-item:hover { border-color: #2e9e68; box-shadow: 0 3px 14px rgba(46,158,104,.1); }
+    .qa-item .qt { font-weight: 700; font-size: .92rem; color: #0a3d2e; margin-bottom: 6px; }
+    .qa-item .qm { font-size: .76rem; color: #7a9585; display: flex; gap: 12px; }
+    .ans-badge { background: #2e9e68; color: #fff; border-radius: 50px; padding: 1px 9px; font-size: .7rem; font-weight: 700; }
+
+    /* ── RESOURCES ── */
+    .res-item {
+      background: #fff;
+      border: 1px solid #ddeae2;
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 10px;
+      transition: border-color .2s;
+    }
+    .res-item:hover { border-color: #2e9e68; }
+    .res-icon { font-size: 1.4rem; width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .res-item h6 { font-weight: 700; font-size: .88rem; margin-bottom: 2px; color: #0a3d2e; }
+    .res-item p  { font-size: .75rem; color: #7a9585; margin: 0; }
+    .res-item .bi-download { color: #2e9e68; font-size: 1.1rem; margin-right: auto; cursor: pointer; }
+
+    /* ── CTA ── */
+    .cta-section {
+      background: linear-gradient(135deg, #0a3d2e, #1a6644);
+      padding: 64px 0;
+      text-align: center;
+    }
+    .cta-section h2 { font-size: 1.8rem; font-weight: 900; color: #fff; margin-bottom: 12px; }
+    .cta-section p  { color: rgba(255,255,255,.7); font-size: .97rem; margin-bottom: 28px; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #071f14;
+      padding: 36px 0 20px;
+      color: rgba(255,255,255,.55);
+      font-size: .85rem;
+      text-align: center;
+    }
+    footer .brand { color: #fff; font-weight: 900; font-size: 1.2rem; display: block; margin-bottom: 8px; }
+    footer a { color: rgba(255,255,255,.5); text-decoration: none; margin: 0 8px; }
+    footer a:hover { color: #f0b429; }
+    .soc a {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 34px; height: 34px; border: 1px solid rgba(255,255,255,.15);
+      border-radius: 8px; color: rgba(255,255,255,.6); margin: 0 4px;
+      transition: all .2s; font-size: .95rem; text-decoration: none;
+    }
+    .soc a:hover { border-color: #f0b429; color: #f0b429; }
+
+    /* ── VIEW ALL ── */
+    .view-all {
+      display: inline-flex; align-items: center; gap: 6px;
+      color: #1a6644; font-weight: 700; font-size: .88rem;
+      border: 1.5px solid #2e9e68; border-radius: 9px;
+      padding: 8px 18px; text-decoration: none;
+      transition: all .2s;
+    }
+    .view-all:hover { background: #2e9e68; color: #fff; }
+
+    /* bg helpers */
+    .bg-g { background: #edf7f0; }
+    .bg-y { background: #fdf6e3; }
+    .bg-b { background: #e8f0fe; }
+    .bg-r { background: #fdeaea; }
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="container position-relative">
+    <h1>Vknow</h1>
+    <P>امتحان آزمایشی کانکور رایگان, جستجوی بورسیه ها , منابع درسی و پرسش‌وپاسخ — همه در یک جا.</P>
+
+    <button class="btn-hero">ثبت‌نام رایگان &nbsp;←</button>
+  </div>
+</div>
 
 
 
+<!-- FEATURES -->
+<section style="background:#f7f9f8">
+  <div class="container">
+    <h2 class="sec-title">خدمات ما</h2>
+    <div class="row g-3">
+      <div class="col-6 col-lg-3">
+        <div class="feat-card">
+          <div class="feat-icon bg-y">🎯</div>
+          <h5>امتحان آزمایشی کانکور</h5>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="feat-card">
+          <div class="feat-icon bg-g">🏆</div>
+          <h5>جستجوی بورسیه</h5>
+          <p>بیش از ۳۰۰ بورسیه بین‌المللی.</p>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="feat-card">
+          <div class="feat-icon bg-b">📁</div>
+          <h5>منابع درسی</h5>
+          <p>جزوه، کتاب و ویدیو آموزشی رایگان.</p>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="feat-card">
+          <div class="feat-icon bg-r">💬</div>
+          <h5>پرسش و پاسخ</h5>
+          <p>سوال بپرس، جواب بده، از تجربه دیگران بیاموز.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTS -->
+<section style="background:#fff">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+      <div>
+        <h2 class="sec-title mb-0">آزمون‌های پرطرفدار</h2>
+        <p class="sec-sub mb-0">شبیه‌ساز واقعی آزمون‌های ورودی</p>
+      </div>
+      <a href="#" class="view-all">همه آزمون‌ها ←</a>
+    </div>
+    <div class="row g-3">
+      <div class="col-md-4">
+        <div class="test-card">
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <span style="font-size:1.5rem">📝</span>
+            <h6 class="mb-0">آزمون کانکور — ریاضی</h6>
+          </div>
+          <span class="badge-free">رایگان</span>
+          <div class="test-meta mt-2">
+            <span><i class="bi bi-question-circle"></i> ۴۵ سوال</span>
+            <span><i class="bi bi-clock"></i> ۶۰ دقیقه</span>
+          </div>
+          <button class="btn-test">شروع آزمون ←</button>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="test-card">
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <span style="font-size:1.5rem">🌐</span>
+            <h6 class="mb-0">آزمون آیلتس — ریدینگ</h6>
+          </div>
+          <span class="badge-free">رایگان</span>
+          <div class="test-meta mt-2">
+            <span><i class="bi bi-question-circle"></i> ۴۰ سوال</span>
+            <span><i class="bi bi-clock"></i> ۶۰ دقیقه</span>
+          </div>
+          <button class="btn-test">شروع آزمون ←</button>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="test-card">
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <span style="font-size:1.5rem">🔬</span>
+            <h6 class="mb-0">آزمون کانکور — علوم</h6>
+          </div>
+          <span class="badge-free">رایگان</span>
+          <div class="test-meta mt-2">
+            <span><i class="bi bi-question-circle"></i> ۵۰ سوال</span>
+            <span><i class="bi bi-clock"></i> ۷۵ دقیقه</span>
+          </div>
+          <button class="btn-test">شروع آزمون ←</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SCHOLARSHIPS -->
+<section style="background:#f7f9f8">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+      <div>
+        <h2 class="sec-title mb-0">بورسیه‌های اخیر</h2>
+        <p class="sec-sub mb-0">فرصت‌های تحصیلی در سراسر جهان</p>
+      </div>
+      <a href="#" class="view-all">همه بورسیه‌ها ←</a>
+    </div>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <div class="sch-card">
+          <span class="sch-flag">🇩🇪</span>
+          <div>
+            <h6>بورسیه DAAD آلمان ۲۰۲۵</h6>
+            <p>تحصیل رایگان در دانشگاه‌های آلمان — ماستری و دکترا</p>
+            <div class="sch-tags"><span>مهندسی</span><span>علوم</span><span>مهلت: ۳۰ سپتامبر</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="sch-card">
+          <span class="sch-flag">🇹🇷</span>
+          <div>
+            <h6>بورسیه دولت ترکیه</h6>
+            <p>شامل هزینه تحصیل، اسکان و بیمه درمانی</p>
+            <div class="sch-tags"><span>لیسانس</span><span>ماستری</span><span>مهلت: ۲۰ فبروری</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="sch-card">
+          <span class="sch-flag">🇬🇧</span>
+          <div>
+            <h6>بورسیه Chevening بریتانیا</h6>
+            <p>ماستری یک‌ساله در دانشگاه‌های برتر انگلستان</p>
+            <div class="sch-tags"><span>ماستری</span><span>رهبری</span><span>مهلت: ۲ نوامبر</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="sch-card">
+          <span class="sch-flag">🇮🇷</span>
+          <div>
+            <h6>بورسیه دانشگاه‌های ایران</h6>
+            <p>پذیرش دانشجویان افغانستانی در رشته‌های مختلف</p>
+            <div class="sch-tags"><span>لیسانس</span><span>ماستری</span><span>دکترا</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- CTA -->
+<div class="cta-section">
+  <div class="container">
+    <h2>آماده‌ای شروع کنی؟</h2>
+    <p>همین حالا ثبت‌نام کن — رایگان، برای همیشه.</p>
+    <button class="btn-hero">ثبت‌نام رایگان &nbsp;←</button>
+  </div>
+</div>
 
 {% endblock content %}
 
