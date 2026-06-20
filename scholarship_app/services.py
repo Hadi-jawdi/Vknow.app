@@ -33,7 +33,7 @@ def search_scholarships(query):
     payload = {
         "q": f"{query} بورسیه",
         "num": 10,
-        "gl": "ir",
+        "gl": "af",
         "hl": "fa",
     }
 
@@ -48,6 +48,8 @@ def search_scholarships(query):
         cache.set(cache_key, results, timeout=60 * 60 * 24)
         return results
     except Exception as e:
+        print("error ", e)
+        print(type(e).__name__)
         return []
 
 

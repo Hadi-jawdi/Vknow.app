@@ -15,6 +15,7 @@ urlpatterns = [
     path('group/', include("groups_app.urls")),
     path('test/', include("kankoor_app.urls")),
     path('scholarships/', include('scholarship_app.urls')),
+    path('newsletter/', include('news_letter_app.urls')),
 
     #social login
     path('accounts/', include('allauth.urls')),

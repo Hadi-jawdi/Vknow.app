@@ -228,7 +228,15 @@
     <h1>Vknow</h1>
     <P>امتحان آزمایشی کانکور رایگان, جستجوی بورسیه ها , منابع درسی و پرسش‌وپاسخ — همه در یک جا.</P>
 
-    <button class="btn-hero">ثبت‌نام رایگان &nbsp;←</button>
+    {% if user.is_authenticated %}
+        <button class="btn-hero">شروع امتحان  ←</button>
+
+
+
+      {% else %}
+            <button class="btn-hero">ثبت‌نام رایگان &nbsp;←</button>
+      {% endif %}
+
   </div>
 </div>
 
@@ -393,5 +401,6 @@
   </div>
 </div>
 
+{% include 'includes/footer.html' %}
 {% endblock content %}
 

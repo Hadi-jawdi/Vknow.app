@@ -30,6 +30,15 @@
     <!-- Main content -->
     <main class="container-fluid">
         {% block content %}
+        {% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert"
+      style="position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9999;font-family:'Vazirmatn',sans-serif;min-width:300px;text-align:center;">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  {% endfor %}
+{% endif %}
         <!-- Page-specific content will go here -->
          
         {% endblock %}

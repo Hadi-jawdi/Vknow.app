@@ -24,4 +24,5 @@ class ScholarshipSearchAPIView(View):
 
         results = search_scholarships(query)
         print("this is the results", results)
+        print(results)
         return JsonResponse({'results': results})

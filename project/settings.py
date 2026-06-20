@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'about_app',
     'kankoor_app',
     'scholarship_app',
+    'news_letter_app',
     #for social login 
     'allauth',
     'allauth.account',
@@ -57,6 +58,7 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
+LOGIN_URL = 'account_app:login_user' 
 LOGIN_REDIRECT_URL = 'account_app:login_user'
 LOGOUT_REDIRECT_URL = '/'
 SOCIALACCOUNT_LOGIN_ON_GET = True
