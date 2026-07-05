@@ -3,117 +3,88 @@
 <link rel="stylesheet" href="{% static 'scholarship_app/scholarship.css' %}">
 {% block content %}
 
-<div class="sch-page" dir="rtl">
-  <!-- ══ Hero ══ -->
-  <div class="sch-hero position-relative text-center px-3 py-5">
-    <p
-      class="mb-4 mx-auto"
-      style="
-        max-width: 500px;
-        color: var(--muted);
-        font-size: 0.95rem;
-        font-weight: 300;
-        line-height: 1.8;
-      "
-    >
-      هزاران بورسیه از سراسر جهان را به‌صورت زنده و لحظه‌ای جستجو کنید
-    </p>
+<div class="container py-5" dir="rtl">
 
-    <!-- Search -->
-    <div class="mx-auto position-relative" style="max-width: 680px">
-      <input
-        id="sch-input"
-        class="sch-search form-control w-100"
-        type="text"
-        placeholder="مثلاً: بورسیه مهندسی در آلمان..."
-      />
-      <div class="sch-spinner" id="sch-spinner"></div>
-      <i class="bi bi-search sch-search-icon"></i>
-    </div>
-
-    <!-- Error -->
-    <div
-      id="sch-error"
-      class="sch-error-box d-none mx-auto mt-3"
-      style="max-width: 680px"
-    ></div>
-
-    <!-- Quick Filter Chips -->
-    <div
-      class="d-flex flex-wrap justify-content-center gap-2 mt-4"
-      id="filter-chips"
-    >
-      <button class="filter-chip active" data-q="">همه</button>
-      <button class="filter-chip" data-q="آلمان">
-        <i class="bi bi-geo-alt"></i> آلمان
-      </button>
-      <button class="filter-chip" data-q="کانادا">
-        <i class="bi bi-geo-alt"></i> کانادا
-      </button>
-      <button class="filter-chip" data-q="انگلستان">
-        <i class="bi bi-geo-alt"></i> انگلستان
-      </button>
-
-      <button class="filter-chip" data-q="دکترا PhD">
-        <i class="bi bi-mortarboard"></i> دکترا
-      </button>
-    </div>
+  <!-- Divider -->
+  <div class="d-flex align-items-center gap-3 mb-4">
+    <div style="flex:1;height:1px;background:#e0e0e0;"></div>
+    <span style="font-size:.9rem;font-weight:700;color:#1a6644;white-space:nowrap;">همه بورسیه‌ها</span>
+    <span style="background:#1a6644;color:#fff;border-radius:50px;padding:2px 12px;font-size:.8rem;font-weight:700;">
+      {{ scholarships|length }}
+    </span>
+    <div style="flex:1;height:1px;background:#e0e0e0;"></div>
   </div>
 
-  <!-- ══ Results Section ══ -->
-  <div class="container" style="max-width: 1100px">
-    <!-- Section divider -->
-    <div class="sch-divider">
-      <div class="sch-divider__line"></div>
-      <span class="sch-divider__label" id="sch-section-label"
-        >بورسیه‌های محبوب</span
-      >
-      <span class="sch-divider__badge" id="sch-count-badge"
-        >{{ popular_scholarships|length }}</span
-      >
-      <div class="sch-divider__line"></div>
-    </div>
+  <!-- Cards -->
+  <div class="row g-4">
+    {% for s in scholarships %}
+    <div class="col-12 col-md-6 col-xl-4">
+      <div class="card h-100 border shadow-sm p-3" style="border-radius:16px;transition:transform .25s,box-shadow .25s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 10px 30px rgba(0,0,0,0.1)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
 
-    <!-- Cards Grid -->
-    <div class="row g-4" id="sch-grid">
-      {% for s in popular_scholarships %}
-      <div class="col-12 col-md-6 col-xl-4">
-        <div
-          class="sch-card card border h-100 p-3"
-          "
-        >
-          <div class="d-flex gap-2 flex-wrap mb-2">
-            <span class="tag-country">{{ s.country }}</span>
-            <span class="tag-level">{{ s.level }}</span>
-          </div>
-          <h3 class="sch-card__title mb-2">{{ s.title }}</h3>
-          <p class="sch-card__desc flex-grow-1 mb-3">{{ s.description }}</p>
-          <a
-            href="{{ s.link }}"
-            target="_blank"
-            rel="noopener"
-            class="sch-card__link d-inline-flex align-items-center gap-1 mb-3"
-          >
-            <i class="bi bi-arrow-left"></i> مشاهده وب‌سایت
-          </a>
-          <div
-            class="sch-card__footer d-flex justify-content-between align-items-center"
-          >
-            <span class="sch-card__source">{{ s.source }}</span>
-            <span class="sch-card__deadline"
-              ><i class="bi bi-clock"></i> {{ s.deadline }}</span
-            >
-          </div>
+        <!-- Tags -->
+        <div class="d-flex gap-2 flex-wrap mb-3">
+          <span style="background:#edf7f0;color:#1a6644;border-radius:50px;padding:3px 12px;font-size:.75rem;font-weight:700;">
+            🌍 {{ s.country }}
+          </span>
+          <span style="background:#fff8e1;color:#b8860b;border-radius:50px;padding:3px 12px;font-size:.75rem;font-weight:700;">
+            🎓 {{ s.get_level_display }}
+          </span>
+          <span style="background:#f0f0f0;color:#555;border-radius:50px;padding:3px 12px;font-size:.75rem;font-weight:700;">
+            {{ s.get_field_display }}
+          </span>
         </div>
+
+        <!-- Title -->
+        <h5 style="font-size:1rem;font-weight:800;color:#0a3d2e;margin-bottom:8px;">{{ s.title }}</h5>
+
+        <!-- University -->
+        {% if s.university %}
+        <p style="font-size:.82rem;color:#888;margin-bottom:8px;">
+          <i class="bi bi-building"></i> {{ s.university }}
+        </p>
+        {% endif %}
+
+        <!-- Description -->
+        <p style="font-size:.87rem;color:#555;line-height:1.75;flex-grow:1;margin-bottom:16px;">
+          {{ s.description|truncatechars:120 }}
+        </p>
+
+        <!-- Dates -->
+        <div class="d-flex justify-content-between align-items-center mb-3" style="font-size:.78rem;color:#888;">
+          <span>
+            <i class="bi bi-calendar-check"></i>
+            شروع: {{ s.start_date|default:"نامشخص" }}
+          </span>
+          <span style="color:{% if s.end_date %}#dc3545{% else %}#888{% endif %};font-weight:600;">
+            <i class="bi bi-clock"></i>
+            مهلت: {{ s.end_date|default:"نامشخص" }}
+          </span>
+        </div>
+
+        <!-- Link -->
+        {% if s.link %}
+        <a href="{{ s.link }}" target="_blank" rel="noopener"
+          class="btn btn-success btn-sm w-100"
+          style="border-radius:10px;font-family:'Vazirmatn',sans-serif;font-weight:700;">
+          <i class="bi bi-arrow-left"></i> مشاهده وب‌سایت
+        </a>
+        {% else %}
+        <button class="btn btn-outline-secondary btn-sm w-100" disabled
+          style="border-radius:10px;font-family:'Vazirmatn',sans-serif;">
+          لینک موجود نیست
+        </button>
+        {% endif %}
+
       </div>
-      {% endfor %}
     </div>
+    {% empty %}
+    <div class="col-12 text-center py-5">
+      <i class="bi bi-journal-x" style="font-size:3.5rem;color:#ccc;"></i>
+      <h5 class="mt-3" style="color:#999;font-weight:700;">هنوز بورسیه‌ای ثبت نشده است</h5>
+    </div>
+    {% endfor %}
   </div>
+
 </div>
-<!-- /sch-page -->
-
-<script src="{% static 'scholarship_app/app.js' %}"></script>
-
-
 
 {% endblock content %}

@@ -8,21 +8,15 @@ from django.views import View
 from .services import search_scholarships, get_popular_scholarships
 
 
+from django.shortcuts import render
+from django.views import View
+from django.db.models import Q
+from .models import Scholarship
+
 class ScholarshipPageView(View):
     def get(self, request):
-        popular = get_popular_scholarships()
+        scholarships = Scholarship.objects.filter(is_active=True)
         return render(request, 'scholarship_app/scholarship.html', {
-            'popular_scholarships': popular
+            'scholarships': scholarships
         })
 
-
-class ScholarshipSearchAPIView(View):
-    def get(self, request):
-        query = request.GET.get('q', '').strip()
-        if not query:
-            return JsonResponse({'error': 'کوئری خالی است'}, status=400)
-
-        results = search_scholarships(query)
-        print("this is the results", results)
-        print(results)
-        return JsonResponse({'results': results})
