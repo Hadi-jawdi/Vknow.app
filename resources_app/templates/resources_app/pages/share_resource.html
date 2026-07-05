@@ -1,66 +1,122 @@
 {% include 'includes/header.html' %}
 {% block content %}
 
-<div class="container py-5">
+<div class="container py-5" dir="rtl" style="max-width:680px;">
+
   <!-- Page Header -->
   <div class="text-center mb-5">
-    <h2 class="fw-bold text-primary">
-      <i class="fa-solid fa-share-nodes me-2"></i> اشتراک‌گذاری منبع آموزشی
-    </h2>
-    <p class="text-muted mt-2">
-      لطفاً منابع آموزشی و فرصت های تحصیلی خود را با دقت وارد کنید تا دیگران بتوانند از آن بهره‌مند شوند 🌱
+    <div style="width:70px;height:70px;border-radius:20px;background:linear-gradient(135deg,#0a3d2e,#2e9e68);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+      <i class="fa-solid fa-share-nodes fa-xl" style="color:#fff;"></i>
+    </div>
+    <h2 class="fw-bold mb-2" style="color:#0a3d2e;font-size:1.5rem;">اشتراک‌گذاری منبع آموزشی</h2>
+    <p style="color:#7a9585;font-size:.92rem;line-height:1.8;max-width:460px;margin:0 auto;">
+      منابع آموزشی خود را با دقت وارد کنید تا دیگر دانشجویان بتوانند از آن بهره‌مند شوند 🌱
     </p>
   </div>
 
-  <!-- Share Form -->
-  <div class="card shadow-lg border-0 rounded-4">
-    <div class="card-body p-4">
-      <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+  <!-- Form Card -->
+  <div class="card border-0 shadow-sm" style="border-radius:24px;overflow:hidden;">
+
+    <!-- Top accent -->
+    <div style="height:5px;background:linear-gradient(90deg,#0a3d2e,#2e9e68,#f0b429);"></div>
+
+    <div class="card-body p-4 p-md-5">
+      <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
         <!-- Title -->
         <div class="mb-4">
-          <label class="form-label fw-semibold">
-            <i class="fa-solid fa-heading me-1 text-primary"></i> عنوان منبع
+          <label class="fw-bold mb-2 d-block" style="color:#0a3d2e;font-size:.9rem;">
+            <i class="fa-solid fa-heading me-1" style="color:#2e9e68;"></i> عنوان منبع
           </label>
-          <input type="text" name="title" class="form-control form-control-lg rounded-3" placeholder="مثلاً آموزش مقدماتی پایتون" required>
+          <input
+            type="text"
+            name="title"
+            class="form-control"
+            placeholder="مثلاً: آموزش مقدماتی پایتون"
+            required
+            style="border-radius:12px;border:1.5px solid #d0e8d8;font-family:'Vazirmatn',sans-serif;padding:12px 16px;font-size:.92rem;"
+            onfocus="this.style.borderColor='#2e9e68';this.style.boxShadow='0 0 0 3px rgba(46,158,104,0.1)'"
+            onblur="this.style.borderColor='#d0e8d8';this.style.boxShadow='none'"
+          />
         </div>
 
         <!-- Description -->
         <div class="mb-4">
-          <label class="form-label fw-semibold">
-            <i class="fa-solid fa-align-right me-1 text-primary"></i> توضیحات
+          <label class="fw-bold mb-2 d-block" style="color:#0a3d2e;font-size:.9rem;">
+            <i class="fa-solid fa-align-right me-1" style="color:#2e9e68;"></i> توضیحات
           </label>
-          <textarea name="description" class="form-control rounded-3" rows="4" placeholder="توضیح کوتاهی درباره‌ی منبع بنویسید..."></textarea>
+          <textarea
+            name="description"
+            rows="4"
+            class="form-control"
+            placeholder="توضیح کوتاهی درباره منبع بنویسید..."
+            style="border-radius:12px;border:1.5px solid #d0e8d8;font-family:'Vazirmatn',sans-serif;padding:12px 16px;font-size:.92rem;resize:none;"
+            onfocus="this.style.borderColor='#2e9e68';this.style.boxShadow='0 0 0 3px rgba(46,158,104,0.1)'"
+            onblur="this.style.borderColor='#d0e8d8';this.style.boxShadow='none'"
+          ></textarea>
         </div>
 
         <!-- Link -->
         <div class="mb-4">
-          <label class="form-label fw-semibold">
-            <i class="fa-solid fa-link me-1 text-primary"></i> لینک (اختیاری)
+          <label class="fw-bold mb-2 d-block" style="color:#0a3d2e;font-size:.9rem;">
+            <i class="fa-solid fa-link me-1" style="color:#2e9e68;"></i> لینک
+            <span style="font-weight:400;color:#aaa;font-size:.8rem;">(اختیاری)</span>
           </label>
-          <input type="url" name="link" class="form-control rounded-3" placeholder="https://example.com/resource">
-          <small class="text-muted">اگر منبع شما آنلاین است، لینک آن را وارد کنید.</small>
+          <input
+            type="url"
+            name="link"
+            class="form-control"
+            placeholder="https://example.com/resource"
+            style="border-radius:12px;border:1.5px solid #d0e8d8;font-family:'Vazirmatn',sans-serif;padding:12px 16px;font-size:.92rem;"
+            onfocus="this.style.borderColor='#2e9e68';this.style.boxShadow='0 0 0 3px rgba(46,158,104,0.1)'"
+            onblur="this.style.borderColor='#d0e8d8';this.style.boxShadow='none'"
+          />
+          <small style="color:#aaa;font-size:.78rem;margin-top:6px;display:block;">اگر منبع شما آنلاین است لینک آن را وارد کنید.</small>
         </div>
 
         <!-- File Upload -->
-        <div class="mb-4">
-          <label class="form-label fw-semibold">
-            <i class="fa-solid fa-upload me-1 text-primary"></i> آپلود فایل (اختیاری)
+        <div class="mb-5">
+          <label class="fw-bold mb-2 d-block" style="color:#0a3d2e;font-size:.9rem;">
+            <i class="fa-solid fa-upload me-1" style="color:#2e9e68;"></i> آپلود فایل
+            <span style="font-weight:400;color:#aaa;font-size:.8rem;">(اختیاری)</span>
           </label>
-          <input type="file" name="file" class="form-control rounded-3">
-          <small class="text-muted">می‌توانید فایل‌هایی مانند PDF، ویدیو، یا تصویر را آپلود کنید.</small>
+          <label for="file-upload"
+            style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;border:2px dashed #c0ddc8;border-radius:14px;padding:28px;cursor:pointer;background:#f8fdf9;transition:all .2s;"
+            onmouseover="this.style.borderColor='#2e9e68';this.style.background='#edf7f0'"
+            onmouseout="this.style.borderColor='#c0ddc8';this.style.background='#f8fdf9'">
+            <i class="fa-solid fa-cloud-arrow-up fa-2x" style="color:#2e9e68;"></i>
+            <span style="font-size:.88rem;color:#555;font-weight:600;">فایل را اینجا بکشید یا کلیک کنید</span>
+            <span style="font-size:.75rem;color:#aaa;">PDF، ویدیو، تصویر — حداکثر ۲۰MB</span>
+            <input type="file" name="file" id="file-upload" style="display:none;" onchange="updateFileName(this)"/>
+          </label>
+          <p id="file-name" style="font-size:.8rem;color:#2e9e68;margin-top:8px;display:none;font-weight:600;">
+            <i class="fa-solid fa-check"></i> <span></span>
+          </p>
         </div>
 
-        <!-- Submit Button -->
-        <div class="text-center mt-4">
-          <button type="submit" class="btn btn-success btn-md px-3 shadow-sm rounded-pill">
-            <i class="fa-solid fa-paper-plane me-2"></i> اشتزاگ گذاری
-          </button>
-        </div>
+        <!-- Submit -->
+        <button
+          type="submit"
+          style="width:100%;background:linear-gradient(135deg,#0a3d2e,#1a6644);color:#fff;border:none;border-radius:14px;padding:14px;font-family:'Vazirmatn',sans-serif;font-weight:800;font-size:1rem;cursor:pointer;transition:all .25s;box-shadow:0 4px 16px rgba(10,61,46,0.25);"
+          onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(10,61,46,0.3)'"
+          onmouseout="this.style.transform='';this.style.boxShadow='0 4px 16px rgba(10,61,46,0.25)'">
+          <i class="fa-solid fa-paper-plane me-2"></i> اشتراک‌گذاری منبع
+        </button>
+
       </form>
     </div>
   </div>
 </div>
+
+<script>
+function updateFileName(input) {
+  const label = document.getElementById('file-name');
+  if (input.files && input.files[0]) {
+    label.style.display = 'block';
+    label.querySelector('span').textContent = input.files[0].name;
+  }
+}
+</script>
 
 {% endblock %}

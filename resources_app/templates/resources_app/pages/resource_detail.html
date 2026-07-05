@@ -1,83 +1,135 @@
 {% include 'includes/header.html' %}
 {% block content %}
 
-<div class="container py-5">
+<div class="container py-5" dir="rtl" style="max-width:860px;">
 
   <!-- Resource Card -->
-  <div class="card border-0 shadow-lg rounded-4 mb-4">
-    <div class="card-body d-flex flex-column flex-md-row align-items-start gap-4">
-      
-      <!-- Icon Section -->
-      <div class="text-center text-md-start">
-        <i class="fa-solid {{ resource.get_file_icon }} text-primary fa-3x"></i>
-      </div>
+  <div class="card border-0 shadow-sm mb-4" style="border-radius:20px;overflow:hidden;">
 
-      <!-- Resource Details -->
-      <div class="flex-grow-1">
-        <h3 class="fw-bold mb-2">{{ resource.title }}</h3>
-        <p class="text-muted mb-3">{{ resource.description|default:"بدون توضیحات" }}</p>
+    <!-- Card Top Bar -->
+    <div style="height:6px;background:linear-gradient(90deg,#0a3d2e,#2e9e68,#f0b429);"></div>
 
-        <div class="d-flex flex-wrap gap-2">
-          {% if resource.link %}
-          <a href="{{ resource.link }}" target="_blank" class="btn btn-outline-primary">
-            <i class="fa-solid fa-link"></i> مشاهده لینک
-          </a>
-          {% endif %}
+    <div class="card-body p-4">
+      <div class="d-flex flex-column flex-md-row align-items-start gap-4">
 
-          {% if resource.file %}
-          <a href="{{ resource.file.url }}" download class="btn btn-outline-success">
-            <i class="fa-solid fa-download"></i> دانلود فایل
-          </a>
-          {% endif %}
+        <!-- Icon -->
+        <div style="width:72px;height:72px;border-radius:18px;background:#edf7f0;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <i class="fa-solid {{ resource.get_file_icon }} fa-2x" style="color:#1a6644;"></i>
+        </div>
+
+        <!-- Details -->
+        <div class="flex-grow-1">
+          <h3 class="fw-bold mb-2" style="color:#0a3d2e;font-size:1.3rem;">{{ resource.title }}</h3>
+          <p style="color:#6c757d;font-size:.93rem;line-height:1.8;margin-bottom:20px;">
+            {{ resource.description|default:"بدون توضیحات" }}
+          </p>
+
+          <div class="d-flex flex-wrap gap-2">
+            {% if resource.link %}
+            <a href="{{ resource.link }}" target="_blank"
+              style="display:inline-flex;align-items:center;gap:6px;background:#fff;border:1.5px solid #1a6644;color:#1a6644;padding:9px 20px;border-radius:10px;font-weight:700;font-size:.88rem;text-decoration:none;transition:all .2s;"
+              onmouseover="this.style.background='#1a6644';this.style.color='#fff'"
+              onmouseout="this.style.background='#fff';this.style.color='#1a6644'">
+              <i class="fa-solid fa-link"></i> مشاهده لینک
+            </a>
+            {% endif %}
+
+            {% if resource.file %}
+            <a href="{{ resource.file.url }}" download
+              style="display:inline-flex;align-items:center;gap:6px;background:#1a6644;color:#fff;padding:9px 20px;border-radius:10px;font-weight:700;font-size:.88rem;text-decoration:none;transition:all .2s;"
+              onmouseover="this.style.background='#0a3d2e'"
+              onmouseout="this.style.background='#1a6644'">
+              <i class="fa-solid fa-download"></i> دانلود فایل
+            </a>
+            {% endif %}
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="card-footer bg-light small text-muted text-end">
+    <!-- Footer -->
+    <div class="card-footer text-end" style="background:#f8faf8;border-top:1px solid #e8f0e8;font-size:.8rem;color:#aaa;padding:12px 20px;">
       <i class="fa-regular fa-clock"></i> آخرین بروزرسانی: {{ resource.updated_at|date:"Y/m/d H:i" }}
     </div>
   </div>
 
   <!-- Comments Section -->
-  <div class="bg-white p-4 shadow-sm rounded-4 mb-4">
-    <h4 class="fw-semibold mb-4">
-      💬 نظرات کاربران ({{ comments|length }})
-    </h4>
+  <div class="card border-0 shadow-sm mb-4" style="border-radius:20px;">
+    <div class="card-body p-4">
 
-    {% if comments %}
-      {% for comment in comments %}
-      <div class="border rounded-3 p-3 mb-3 bg-light">
-        <div class="d-flex justify-content-between align-items-center mb-1">
-          <strong class="text-primary">@{{ comment.user.username }}</strong>
-          <small class="text-muted">{{ comment.created_at|timesince }} پیش</small>
+      <h4 class="fw-bold mb-4" style="color:#0a3d2e;font-size:1.1rem;">
+        💬 نظرات کاربران
+        <span style="background:#edf7f0;color:#1a6644;border-radius:50px;padding:2px 12px;font-size:.8rem;font-weight:700;margin-right:8px;">
+          {{ comments|length }}
+        </span>
+      </h4>
+
+      {% if comments %}
+        {% for comment in comments %}
+        <div class="d-flex gap-3 mb-4">
+          <!-- Avatar -->
+          <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#0a3d2e,#2e9e68);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:.9rem;flex-shrink:0;">
+            {{ comment.user.username|first|upper }}
+          </div>
+          <!-- Bubble -->
+          <div style="flex:1;">
+            <div style="background:#f5faf6;border:1px solid #e0ede5;border-radius:14px;padding:14px 16px;">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span style="font-weight:700;color:#1a6644;font-size:.88rem;">@{{ comment.user.username }}</span>
+                <span style="font-size:.75rem;color:#aaa;">{{ comment.created_at|timesince }} پیش</span>
+              </div>
+              <p style="margin:0;font-size:.9rem;color:#444;line-height:1.75;">{{ comment.content }}</p>
+            </div>
+          </div>
         </div>
-        <p class="mb-0">{{ comment.content }}</p>
-      </div>
-      {% endfor %}
-    {% else %}
-      <p class="text-muted">هنوز نظری ثبت نشده است. اولین نفر باشید!</p>
-    {% endif %}
+        {% endfor %}
+      {% else %}
+        <div class="text-center py-4">
+          <i class="fa-regular fa-comment-dots" style="font-size:2.5rem;color:#ccc;"></i>
+          <p style="color:#aaa;margin-top:12px;font-size:.9rem;">هنوز نظری ثبت نشده — اولین نفر باشید!</p>
+        </div>
+      {% endif %}
+
+    </div>
   </div>
 
   <!-- Add Comment -->
   {% if user.is_authenticated %}
-  <div class="bg-light p-4 rounded-4 shadow-sm">
-    <h5 class="fw-semibold mb-3">✍️ ارسال نظر جدید</h5>
-    <form method="post">
-      {% csrf_token %}
-      <div class="mb-3">
-        <textarea name="content" rows="3" class="form-control rounded-3" placeholder="نظر خود را بنویسید..." required></textarea>
-      </div>
-      <button type="submit" class="btn btn-success px-4">
-        <i class="fa-solid fa-paper-plane"></i> ارسال نظر
-      </button>
-    </form>
+  <div class="card border-0 shadow-sm" style="border-radius:20px;">
+    <div class="card-body p-4">
+      <h5 class="fw-bold mb-3" style="color:#0a3d2e;font-size:1rem;">✍️ ارسال نظر جدید</h5>
+      <form method="post">
+        {% csrf_token %}
+        <textarea
+          name="content"
+          rows="3"
+          class="form-control mb-3"
+          placeholder="نظر خود را بنویسید..."
+          required
+          style="border-radius:12px;font-family:'Vazirmatn',sans-serif;font-size:.9rem;border:1.5px solid #d0e8d8;resize:none;"
+          onfocus="this.style.borderColor='#2e9e68'" onblur="this.style.borderColor='#d0e8d8'"
+        ></textarea>
+        <button type="submit"
+          style="background:#1a6644;color:#fff;border:none;border-radius:10px;padding:10px 28px;font-family:'Vazirmatn',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer;transition:background .2s;"
+          onmouseover="this.style.background='#0a3d2e'"
+          onmouseout="this.style.background='#1a6644'">
+          <i class="fa-solid fa-paper-plane"></i> ارسال نظر
+        </button>
+      </form>
+    </div>
   </div>
+
   {% else %}
-  <div class="alert alert-warning mt-4" role="alert">
-    <i class="fa-solid fa-user-lock"></i> برای ارسال نظر باید ابتدا وارد حساب کاربری خود شوید.
+  <div style="background:#fffbe6;border:1.5px solid #f0b429;border-radius:14px;padding:16px 20px;display:flex;align-items:center;gap:12px;">
+    <i class="fa-solid fa-user-lock" style="color:#f0b429;font-size:1.3rem;"></i>
+    <span style="font-size:.9rem;color:#7a6000;">
+      برای ارسال نظر باید ابتدا
+      <a href="{% url 'account_app:login_user' %}" style="color:#1a6644;font-weight:700;">وارد حساب کاربری</a>
+      خود شوید.
+    </span>
   </div>
   {% endif %}
+
 </div>
 
 {% endblock %}

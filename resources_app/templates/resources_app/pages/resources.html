@@ -1,13 +1,18 @@
 {% include 'includes/header.html' %}
 {% block content %}
 
-<div class="container py-5">
+<div class="container py-5" dir="rtl" style="max-width:1100px;">
+
   <!-- Page Header -->
-  <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
-    <h2 class="fw-bold mb-3 mb-md-0">
-      📚 منابع به اشتراک گذاشته شده
-    </h2>
-    <a href="{% url 'resources_app:share_resource' %}" class="btn btn-primary shadow-sm">
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-5">
+    <div>
+      <h2 class="fw-bold mb-1" style="color:#0a3d2e;font-size:1.6rem;">📚 منابع آموزشی</h2>
+      <p style="color:#7a9585;font-size:.9rem;margin:0;">منابع به اشتراک گذاشته شده توسط دانشجویان</p>
+    </div>
+    <a href="{% url 'resources_app:share_resource' %}"
+      style="display:inline-flex;align-items:center;gap:8px;background:#1a6644;color:#fff;padding:11px 24px;border-radius:12px;font-weight:700;font-size:.9rem;text-decoration:none;transition:all .2s;margin-top:12px;"
+      onmouseover="this.style.background='#0a3d2e'"
+      onmouseout="this.style.background='#1a6644'">
       <i class="fa-solid fa-plus"></i> افزودن منبع جدید
     </a>
   </div>
@@ -16,58 +21,95 @@
   <div class="row g-4">
     {% for resource in resources %}
     <div class="col-md-6 col-lg-4">
-      <div class="card h-100 border-0 shadow-lg rounded-4 overflow-hidden">
-        
-        <!-- Card Body -->
-        <div class="card-body">
-          <div class="d-flex align-items-center mb-3">
-            <i class="fa-solid {{ resource.get_file_icon }} fa-2x text-primary me-3"></i>
+      <div class="card h-100 border-0 shadow-sm" style="border-radius:20px;overflow:hidden;transition:transform .25s,box-shadow .25s;"
+        onmouseover="this.style.transform='translateY(-5px)';this.style.boxShadow='0 12px 36px rgba(0,0,0,0.1)'"
+        onmouseout="this.style.transform='';this.style.boxShadow=''">
+
+        <!-- Top accent bar -->
+        <div style="height:5px;background:linear-gradient(90deg,#0a3d2e,#2e9e68,#f0b429);"></div>
+
+        <div class="card-body p-4">
+
+          <!-- Icon + Title -->
+          <div class="d-flex align-items-start gap-3 mb-3">
+            <div style="width:52px;height:52px;border-radius:14px;background:#edf7f0;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <i class="fa-solid {{ resource.get_file_icon }} fa-lg" style="color:#1a6644;"></i>
+            </div>
             <div>
-              <h5 class="card-title mb-1 fw-semibold text-dark">{{ resource.title }}</h5>
-              <small class="text-muted">
+              <h5 class="fw-bold mb-1" style="color:#0a3d2e;font-size:.97rem;line-height:1.4;">{{ resource.title }}</h5>
+              <span style="font-size:.78rem;color:#aaa;">
                 <i class="fa-regular fa-user"></i> {{ resource.user.username }}
-              </small>
+              </span>
             </div>
           </div>
 
-          <p class="text-muted small mb-4">{{ resource.description|truncatewords:20|default:"بدون توضیحات" }}</p>
+          <!-- Description -->
+          <p style="color:#6c757d;font-size:.86rem;line-height:1.75;margin-bottom:20px;min-height:48px;">
+            {{ resource.description|truncatewords:18|default:"بدون توضیحات" }}
+          </p>
 
-          <!-- Resource Links -->
+          <!-- Action Buttons -->
           <div class="d-flex flex-wrap gap-2">
             {% if resource.link %}
-            <a href="{{ resource.link }}" target="_blank" class="btn btn-outline-primary btn-sm">
+            <a href="{{ resource.link }}" target="_blank"
+              style="display:inline-flex;align-items:center;gap:5px;background:#fff;border:1.5px solid #1a6644;color:#1a6644;padding:6px 14px;border-radius:8px;font-size:.8rem;font-weight:700;text-decoration:none;transition:all .2s;"
+              onmouseover="this.style.background='#1a6644';this.style.color='#fff'"
+              onmouseout="this.style.background='#fff';this.style.color='#1a6644'">
               <i class="fa-solid fa-link"></i> مشاهده لینک
             </a>
             {% endif %}
+
             {% if resource.file %}
-            <a href="{{ resource.file.url }}" download class="btn btn-outline-success btn-sm">
-              <i class="fa-solid fa-download"></i> دانلود فایل
+            <a href="{{ resource.file.url }}" download
+              style="display:inline-flex;align-items:center;gap:5px;background:#fff;border:1.5px solid #2e9e68;color:#2e9e68;padding:6px 14px;border-radius:8px;font-size:.8rem;font-weight:700;text-decoration:none;transition:all .2s;"
+              onmouseover="this.style.background='#2e9e68';this.style.color='#fff'"
+              onmouseout="this.style.background='#fff';this.style.color='#2e9e68'">
+              <i class="fa-solid fa-download"></i> دانلود
             </a>
             {% endif %}
-            <a href="{% url 'resources_app:resource_detail' resource.id %}" 
-               class="btn btn-outline-secondary btn-sm">
-              <i class="fa-solid fa-comment-dots"></i> نظرات و جزئیات
+
+            <a href="{% url 'resources_app:resource_detail' resource.id %}"
+              style="display:inline-flex;align-items:center;gap:5px;background:#fff;border:1.5px solid #dee2e6;color:#555;padding:6px 14px;border-radius:8px;font-size:.8rem;font-weight:700;text-decoration:none;transition:all .2s;"
+              onmouseover="this.style.background='#f5f5f5'"
+              onmouseout="this.style.background='#fff'">
+              <i class="fa-solid fa-comment-dots"></i> جزئیات
             </a>
           </div>
         </div>
 
         <!-- Footer -->
-        <div class="card-footer bg-light small text-muted d-flex justify-content-between align-items-center">
-          <span><i class="fa-regular fa-clock"></i> {{ resource.created_at|timesince }} پیش</span>
-          <span><i class="fa-regular fa-message"></i> {{ resource.comments.count }} نظر</span>
+        <div class="card-footer d-flex justify-content-between align-items-center"
+          style="background:#f8faf8;border-top:1px solid #e8f0e8;padding:10px 18px;">
+          <span style="font-size:.76rem;color:#aaa;">
+            <i class="fa-regular fa-clock"></i> {{ resource.created_at|timesince }} پیش
+          </span>
+          <span style="background:#edf7f0;color:#1a6644;border-radius:50px;padding:2px 10px;font-size:.74rem;font-weight:700;">
+            <i class="fa-regular fa-message"></i> {{ resource.comments.count }} نظر
+          </span>
         </div>
+
       </div>
     </div>
     {% endfor %}
   </div>
+
   {% else %}
-  <!-- No Resources Message -->
-  <div class="alert alert-info mt-4 text-center" role="alert">
-    <i class="fa-solid fa-info-circle"></i> هنوز هیچ منبعی به اشتراک گذاشته نشده است.
+  <!-- Empty State -->
+  <div class="text-center py-5">
+    <div style="width:90px;height:90px;border-radius:50%;background:#edf7f0;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+      <i class="fa-solid fa-folder-open fa-2x" style="color:#2e9e68;"></i>
+    </div>
+    <h5 class="fw-bold" style="color:#0a3d2e;">هنوز منبعی به اشتراک گذاشته نشده</h5>
+    <p style="color:#aaa;font-size:.9rem;margin-bottom:24px;">اولین نفر باشید که منبع آموزشی به اشتراک می‌گذارید!</p>
+    <a href="{% url 'resources_app:share_resource' %}"
+      style="display:inline-flex;align-items:center;gap:8px;background:#1a6644;color:#fff;padding:11px 28px;border-radius:12px;font-weight:700;font-size:.9rem;text-decoration:none;">
+      <i class="fa-solid fa-plus"></i> افزودن اولین منبع
+    </a>
   </div>
   {% endif %}
-</div>
-{% include 'includes/footer.html' %}
 
+</div>
+
+{% include 'includes/footer.html' %}
 
 {% endblock %}

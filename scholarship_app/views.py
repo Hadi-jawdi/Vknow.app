@@ -5,7 +5,6 @@ from django.shortcuts import render
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views import View
-from .services import search_scholarships, get_popular_scholarships
 
 
 from django.shortcuts import render
