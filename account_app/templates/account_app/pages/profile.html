@@ -1,145 +1,275 @@
 {% include 'includes/header.html' %}
 {% load static %}
-
 {% block content %}
+
 <style>
-  .profile-card {
-    border-radius: 16px;
-    border: none;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+  .profile-container { max-width:780px; }
+
+  .profile-card-sticky { position: sticky; top: 20px; }
+
+  .group-card-body {
+    display:flex;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  .group-card-info { flex:1 1 160px; min-width:0; }
+  .group-card-actions {
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .group-card-actions a,
+  .group-card-actions button {
+    white-space:nowrap;
   }
 
-  .profile-pic-wrapper {
-    position: relative;
-    width: 120px;
-    height: 120px;
-    margin: 0 auto 16px;
+  .section-header {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:8px;
   }
 
-  .profile-pic {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 4px solid #e9ecef;
+  @media (max-width: 767.98px) {
+    .profile-card-sticky { position: static; }
+    .profile-py { padding-top:2rem !important; padding-bottom:2rem !important; }
+    .profile-card-body { padding:1.25rem !important; }
+    .group-card-body { padding:0.85rem !important; }
+    .group-card-avatar { width:40px !important; height:40px !important; font-size:1rem !important; }
+    .group-card-actions { width:100%; }
+    .group-card-actions a,
+    .group-card-actions button { flex:1 1 auto; text-align:center; }
   }
 
-  .profile-pic-placeholder {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #0d6efd, #0056d2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2.5rem;
-    color: white;
-    font-weight: 700;
-    border: 4px solid #e9ecef;
-  }
-
-  .form-control, .form-select {
-    border-radius: 10px;
-    padding: 10px 12px;
-    border: 1.5px solid #e0e7ef;
-    transition: border-color 0.2s;
-  }
-
-  .form-control:focus {
-    border-color: #0d6efd;
-    box-shadow: 0 0 0 3px rgba(13,110,253,0.1);
-  }
-
-  .btn-save {
-    border-radius: 10px;
-    padding: 10px;
-    font-weight: 600;
-  }
-
-  .section-label {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: #6c757d;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 16px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #f0f0f0;
+  @media (max-width: 575.98px) {
+    .profile-py { padding-top:1.25rem !important; padding-bottom:1.25rem !important; }
+    .name-row .col-6 { flex:0 0 100%; max-width:100%; }
+    .group-card-info .fw-bold { font-size:.9rem !important; }
+    .section-header h6 { font-size:.88rem !important; }
   }
 </style>
 
-<div class="container py-5" dir="rtl">
-  <div class="row justify-content-center">
-    <div class="col-12 col-md-8 col-lg-6">
-      <div class="card profile-card p-4">
+<div class="container profile-py py-5 profile-container" dir="rtl">
 
-        <!-- Profile Picture -->
-        <div class="text-center mb-4">
-          <div class="profile-pic-wrapper">
-            {% if profile.profile_picture %}
-              <img src="{{ profile.profile_picture.url }}" class="profile-pic" alt="profile">
-            {% else %}
-              <div class="profile-pic-placeholder">
-                {{ request.user.username|first|upper }}
-              </div>
-            {% endif %}
+  <div class="row g-4">
+
+    <!-- LEFT: Profile Card -->
+    <div class="col-12 col-lg-5">
+      <div class="card border-0 shadow-sm profile-card-sticky" style="border-radius:24px;overflow:hidden;">
+        <div style="height:5px;background:linear-gradient(90deg,#0a3d2e,#2e9e68,#f0b429);"></div>
+        <div class="card-body p-4 profile-card-body">
+
+          <!-- Avatar -->
+          <div class="text-center mb-4">
+            <div style="position:relative;width:100px;height:100px;margin:0 auto 14px;max-width:100%;">
+              {% if profile.profile_picture %}
+                <img src="{{ profile.profile_picture.url }}" alt="profile"
+                  style="width:100px;height:100px;max-width:100%;border-radius:50%;object-fit:cover;border:4px solid #edf7f0;">
+              {% else %}
+                <div style="width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#0a3d2e,#2e9e68);display:flex;align-items:center;justify-content:center;font-size:2.2rem;color:#fff;font-weight:900;border:4px solid #edf7f0;">
+                  {{ request.user.username|first|upper }}
+                </div>
+              {% endif %}
+            </div>
+            <h5 class="fw-bold mb-0" style="color:#0a3d2e;">{{ request.user.username }}</h5>
+            <small style="color:#aaa;word-break:break-all;">{{ request.user.email }}</small>
           </div>
-          <h5 class="fw-bold mb-0">{{ request.user.username }}</h5>
-          <small class="text-muted">{{ request.user.email }}</small>
+
+          <!-- Messages -->
+          {% if messages %}
+            {% for message in messages %}
+              <div style="background:rgba(46,158,104,.1);border:1.5px solid #2e9e68;border-radius:10px;padding:10px 14px;margin-bottom:16px;color:#1a6644;font-size:.85rem;font-weight:600;text-align:center;">
+                <i class="bi bi-check-circle me-1"></i>{{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+
+          <!-- Form -->
+          <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <p style="font-size:.72rem;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:1.5px;border-bottom:1px solid #f0f0f0;padding-bottom:8px;margin-bottom:16px;">اطلاعات شخصی</p>
+
+            <div class="row g-2 mb-3 name-row">
+              <div class="col-6">
+                <label class="fw-bold mb-1 d-block" style="color:#0a3d2e;font-size:.82rem;">نام</label>
+                <input type="text" name="first_name"
+                  value="{{ form.first_name.value|default:'' }}"
+                  placeholder="نام"
+                  style="width:100%;border-radius:10px;border:1.5px solid #d0e8d8;font-family:'Vazirmatn',sans-serif;padding:9px 12px;font-size:.86rem;outline:none;box-sizing:border-box;"
+                  onfocus="this.style.borderColor='#2e9e68'" onblur="this.style.borderColor='#d0e8d8'"/>
+              </div>
+              <div class="col-6">
+                <label class="fw-bold mb-1 d-block" style="color:#0a3d2e;font-size:.82rem;">نام خانوادگی</label>
+                <input type="text" name="last_name"
+                  value="{{ form.last_name.value|default:'' }}"
+                  placeholder="نام خانوادگی"
+                  style="width:100%;border-radius:10px;border:1.5px solid #d0e8d8;font-family:'Vazirmatn',sans-serif;padding:9px 12px;font-size:.86rem;outline:none;box-sizing:border-box;"
+                  onfocus="this.style.borderColor='#2e9e68'" onblur="this.style.borderColor='#d0e8d8'"/>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="fw-bold mb-1 d-block" style="color:#0a3d2e;font-size:.82rem;">درباره من</label>
+              <textarea name="bio" rows="3" placeholder="چند جمله درباره خودتان..."
+                style="width:100%;border-radius:10px;border:1.5px solid #d0e8d8;font-family:'Vazirmatn',sans-serif;padding:9px 12px;font-size:.86rem;outline:none;resize:none;box-sizing:border-box;"
+                onfocus="this.style.borderColor='#2e9e68'" onblur="this.style.borderColor='#d0e8d8'">{{ form.bio.value|default:'' }}</textarea>
+            </div>
+
+            <p style="font-size:.72rem;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:1.5px;border-bottom:1px solid #f0f0f0;padding-bottom:8px;margin-bottom:16px;">تصویر پروفایل</p>
+
+            <div class="mb-4">
+              <label for="pic-upload"
+                style="display:flex;align-items:center;gap:8px;border:2px dashed #c0ddc8;border-radius:12px;padding:14px;cursor:pointer;background:#f8fdf9;transition:all .2s;flex-wrap:wrap;"
+                onmouseover="this.style.borderColor='#2e9e68'" onmouseout="this.style.borderColor='#c0ddc8'">
+                <i class="bi bi-cloud-arrow-up" style="color:#2e9e68;font-size:1.2rem;"></i>
+                <span style="font-size:.82rem;color:#555;word-break:break-all;">انتخاب تصویر</span>
+                <input type="file" name="profile_picture" id="pic-upload" accept="image/*" style="display:none;" onchange="this.previousElementSibling.textContent=this.files[0]?.name||'انتخاب تصویر'"/>
+              </label>
+              <small style="color:#aaa;font-size:.74rem;">JPG، PNG — حداکثر ۲ مگابایت</small>
+            </div>
+
+            <button type="submit"
+              style="width:100%;background:linear-gradient(135deg,#0a3d2e,#1a6644);color:#fff;border:none;border-radius:12px;padding:12px;font-family:'Vazirmatn',sans-serif;font-weight:800;font-size:.92rem;cursor:pointer;transition:all .25s;box-shadow:0 4px 14px rgba(10,61,46,.25);"
+              onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 22px rgba(10,61,46,.35)'"
+              onmouseout="this.style.transform='';this.style.boxShadow='0 4px 14px rgba(10,61,46,.25)'">
+              <i class="bi bi-check-lg me-1"></i> ذخیره تغییرات
+            </button>
+          </form>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Groups -->
+    <div class="col-12 col-lg-7">
+
+      <!-- Created Groups -->
+      <div class="mb-4">
+        <div class="section-header mb-3">
+          <h6 class="fw-bold mb-0" style="color:#0a3d2e;font-size:.95rem;">
+            <i class="bi bi-people-fill me-1" style="color:#2e9e68;"></i> گروه‌های ساخته‌شده
+            <span style="background:#edf7f0;color:#1a6644;border-radius:50px;padding:1px 10px;font-size:.75rem;margin-right:6px;">{{ created_groups|length }}</span>
+          </h6>
+          <a href="{% url 'groups_app:create_group' %}"
+            style="display:inline-flex;align-items:center;gap:5px;background:#1a6644;color:#fff;padding:6px 14px;border-radius:9px;font-size:.78rem;font-weight:700;text-decoration:none;transition:all .2s;white-space:nowrap;"
+            onmouseover="this.style.background='#0a3d2e'" onmouseout="this.style.background='#1a6644'">
+            <i class="bi bi-plus"></i> گروه جدید
+          </a>
         </div>
 
-        <!-- Success Message -->
-        {% if messages %}
-          {% for message in messages %}
-            <div class="alert alert-success text-center">{{ message }}</div>
+        {% if created_groups %}
+          {% for group in created_groups %}
+          <div class="card border-0 shadow-sm mb-3" style="border-radius:16px;overflow:hidden;transition:transform .2s,box-shadow .2s;"
+            onmouseover="this.style.transform='translateX(-3px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,.1)'"
+            onmouseout="this.style.transform='';this.style.boxShadow=''">
+            <div style="height:3px;background:linear-gradient(90deg,#0a3d2e,#2e9e68);"></div>
+            <div class="card-body p-3 group-card-body">
+              <div class="group-card-avatar" style="width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#0a3d2e,#2e9e68);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:1.1rem;flex-shrink:0;">
+                {{ group.name|first|upper }}
+              </div>
+              <div class="group-card-info">
+                <div class="fw-bold text-truncate" style="color:#0a3d2e;font-size:.92rem;">{{ group.name }}</div>
+                <div style="font-size:.75rem;color:#aaa;">
+                  <i class="bi bi-people me-1"></i>{{ group.members.count }} عضو
+                  &nbsp;·&nbsp;
+                  <i class="bi bi-key me-1"></i>
+                  <span style="font-weight:700;color:#f0b429;letter-spacing:2px;">{{ group.code }}</span>
+                </div>
+              </div>
+              <div class="group-card-actions">
+                <button onclick="copyCode('{{ group.code }}', this)"
+                  style="background:#fff8e1;border:1px solid #f0b429;color:#b8860b;border-radius:8px;padding:5px 12px;font-size:.74rem;font-weight:700;cursor:pointer;font-family:'Vazirmatn',sans-serif;transition:all .2s;"
+                  onmouseover="this.style.background='#f0b429';this.style.color='#0a3d2e'"
+                  onmouseout="this.style.background='#fff8e1';this.style.color='#b8860b'">
+                  <i class="bi bi-clipboard me-1"></i>کپی کد
+                </button>
+                <a href="{% url 'groups_app:group_detail' group.id %}"
+                  style="background:#edf7f0;border:1px solid #2e9e68;color:#1a6644;border-radius:8px;padding:5px 12px;font-size:.74rem;font-weight:700;text-decoration:none;transition:all .2s;"
+                  onmouseover="this.style.background='#2e9e68';this.style.color='#fff'"
+                  onmouseout="this.style.background='#edf7f0';this.style.color='#1a6644'">
+                  <i class="bi bi-box-arrow-in-left me-1"></i>ورود
+                </a>
+              </div>
+            </div>
+          </div>
           {% endfor %}
+        {% else %}
+          <div style="background:#fff;border:1.5px dashed #c0ddc8;border-radius:16px;padding:28px;text-align:center;">
+            <i class="bi bi-people" style="font-size:2rem;color:#c0ddc8;display:block;margin-bottom:10px;"></i>
+            <p style="color:#aaa;font-size:.85rem;margin:0;">هنوز گروهی نساخته‌اید</p>
+          </div>
         {% endif %}
-
-        <!-- Form -->
-        <form method="post" enctype="multipart/form-data">
-          {% csrf_token %}
-
-          <div class="section-label">اطلاعات شخصی</div>
-
-          <div class="row g-3 mb-3">
-            <div class="col-6">
-              <label class="form-label fw-semibold">نام</label>
-              <input type="text" name="first_name"
-                     value="{{ form.first_name.value|default:'' }}"
-                     class="form-control" placeholder="نام">
-            </div>
-            <div class="col-6">
-              <label class="form-label fw-semibold">نام خانوادگی</label>
-              <input type="text" name="last_name"
-                     value="{{ form.last_name.value|default:'' }}"
-                     class="form-control" placeholder="نام خانوادگی">
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label fw-semibold">درباره من</label>
-            <textarea name="bio" class="form-control" rows="4"
-                      placeholder="چند جمله درباره خودتان بنویسید...">{{ form.bio.value|default:'' }}</textarea>
-          </div>
-
-          <div class="section-label mt-4">تصویر پروفایل</div>
-
-          <div class="mb-4">
-            <input type="file" name="profile_picture" class="form-control" accept="image/*">
-            <small class="text-muted">فرمت‌های مجاز: JPG، PNG — حداکثر ۲ مگابایت</small>
-          </div>
-
-          <div class="d-grid">
-            <button type="submit" class="btn btn-primary btn-save">
-              <i class="bi bi-check-lg me-2"></i> ذخیره تغییرات
-            </button>
-          </div>
-
-        </form>
       </div>
+
+      <!-- Joined Groups -->
+      <div>
+        <div class="section-header mb-3">
+          <h6 class="fw-bold mb-0" style="color:#0a3d2e;font-size:.95rem;">
+            <i class="bi bi-person-check-fill me-1" style="color:#2e9e68;"></i> گروه‌های عضو شده
+            <span style="background:#edf7f0;color:#1a6644;border-radius:50px;padding:1px 10px;font-size:.75rem;margin-right:6px;">{{ joined_groups|length }}</span>
+          </h6>
+          <a href="{% url 'groups_app:join_group' %}"
+            style="display:inline-flex;align-items:center;gap:5px;background:#fff;border:1.5px solid #1a6644;color:#1a6644;padding:6px 14px;border-radius:9px;font-size:.78rem;font-weight:700;text-decoration:none;transition:all .2s;white-space:nowrap;"
+            onmouseover="this.style.background='#1a6644';this.style.color='#fff'"
+            onmouseout="this.style.background='#fff';this.style.color='#1a6644'">
+            <i class="bi bi-box-arrow-in-right"></i> پیوستن به گروه
+          </a>
+        </div>
+
+        {% if joined_groups %}
+          {% for membership in joined_groups %}
+          <div class="card border-0 shadow-sm mb-3" style="border-radius:16px;overflow:hidden;transition:transform .2s,box-shadow .2s;"
+            onmouseover="this.style.transform='translateX(-3px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,.1)'"
+            onmouseout="this.style.transform='';this.style.boxShadow=''">
+            <div style="height:3px;background:linear-gradient(90deg,#c8960c,#f0b429);"></div>
+            <div class="card-body p-3 group-card-body">
+              <div class="group-card-avatar" style="width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#c8960c,#f0b429);display:flex;align-items:center;justify-content:center;color:#0a3d2e;font-weight:900;font-size:1.1rem;flex-shrink:0;">
+                {{ membership.group.name|first|upper }}
+              </div>
+              <div class="group-card-info">
+                <div class="fw-bold text-truncate" style="color:#0a3d2e;font-size:.92rem;">{{ membership.group.name }}</div>
+                <div style="font-size:.75rem;color:#aaa;">
+                  <i class="bi bi-people me-1"></i>{{ membership.group.members.count }} عضو
+                  &nbsp;·&nbsp;
+                  <i class="bi bi-person me-1"></i>سازنده: {{ membership.group.creator.username }}
+                </div>
+              </div>
+              <div class="group-card-actions">
+                <a href="{% url 'groups_app:group_detail' membership.group.id %}"
+                  style="background:#edf7f0;border:1px solid #2e9e68;color:#1a6644;border-radius:8px;padding:5px 12px;font-size:.74rem;font-weight:700;text-decoration:none;transition:all .2s;"
+                  onmouseover="this.style.background='#2e9e68';this.style.color='#fff'"
+                  onmouseout="this.style.background='#edf7f0';this.style.color='#1a6644'">
+                  <i class="bi bi-box-arrow-in-left me-1"></i>ورود
+                </a>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <div style="background:#fff;border:1.5px dashed #c0ddc8;border-radius:16px;padding:28px;text-align:center;">
+            <i class="bi bi-person-plus" style="font-size:2rem;color:#c0ddc8;display:block;margin-bottom:10px;"></i>
+            <p style="color:#aaa;font-size:.85rem;margin:0;">هنوز به هیچ گروهی نپیوسته‌اید</p>
+          </div>
+        {% endif %}
+      </div>
+
     </div>
   </div>
 </div>
+
+<script>
+function copyCode(code, btn) {
+  navigator.clipboard.writeText(code).then(function() {
+    btn.innerHTML = '<i class="bi bi-check me-1"></i>کپی شد!';
+    setTimeout(function() {
+      btn.innerHTML = '<i class="bi bi-clipboard me-1"></i>کپی کد';
+    }, 2000);
+  });
+}
+</script>
 
 {% include 'includes/footer.html' %}
 {% endblock content %}

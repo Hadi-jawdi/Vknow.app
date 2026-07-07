@@ -1,14 +1,61 @@
 {% include 'includes/header.html' %}
-<div class="container mt-5 shadow p-4 rounded">
-  <h2>پیوستن به گروه</h2>
-  {% if error %}<p class="text-danger">{{ error }}</p>{% endif %}
-  <form method="post">
-    {% csrf_token %}
-    <div class="mb-3">
-      <label class="form-label">کد گروه</label>
-      <input type="text" name="code" class="form-control" required>
+{% block content %}
+
+<div class="container py-5" dir="rtl" style="max-width:560px;">
+
+  <div class="text-center mb-5">
+    <div style="width:68px;height:68px;border-radius:20px;background:linear-gradient(135deg,#0a3d2e,#2e9e68);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+      <i class="bi bi-box-arrow-in-right" style="color:#fff;font-size:1.6rem;"></i>
     </div>
-    <button type="submit" class="btn btn-primary btn-lg">پیوستن</button>
-  </form>
+    <h2 class="fw-bold mb-2" style="color:#0a3d2e;font-size:1.4rem;">پیوستن به گروه</h2>
+    <p style="color:#7a9585;font-size:.9rem;">کد گروه را از دوستت بگیر و وارد کن</p>
+  </div>
+
+  <div class="card border-0 shadow-sm" style="border-radius:24px;overflow:hidden;">
+    <div style="height:5px;background:linear-gradient(90deg,#0a3d2e,#2e9e68,#f0b429);"></div>
+    <div class="card-body p-4 p-md-5">
+
+      {% if error %}
+      <div style="background:rgba(220,53,69,.1);border:1.5px solid #dc3545;border-radius:12px;padding:12px 16px;margin-bottom:20px;color:#dc3545;font-size:.88rem;font-weight:600;">
+        <i class="bi bi-exclamation-circle me-2"></i>{{ error }}
+      </div>
+      {% endif %}
+
+      <form method="post">
+        {% csrf_token %}
+        <div class="mb-4">
+          <label class="fw-bold mb-2 d-block" style="color:#0a3d2e;font-size:.9rem;">
+            <i class="bi bi-key me-1" style="color:#2e9e68;"></i> کد گروه
+          </label>
+          <input
+            type="text"
+            name="code"
+            required
+            placeholder="کد ۶ رقمی گروه را وارد کنید..."
+            style="width:100%;border-radius:12px;border:1.5px solid #d0e8d8;font-family:'Vazirmatn',sans-serif;padding:12px 16px;font-size:.93rem;outline:none;text-align:center;letter-spacing:4px;font-weight:700;transition:all .2s;"
+            onfocus="this.style.borderColor='#2e9e68';this.style.boxShadow='0 0 0 3px rgba(46,158,104,0.1)'"
+            onblur="this.style.borderColor='#d0e8d8';this.style.boxShadow='none'"
+          />
+        </div>
+
+        <button type="submit"
+          style="width:100%;background:linear-gradient(135deg,#0a3d2e,#1a6644);color:#fff;border:none;border-radius:14px;padding:13px;font-family:'Vazirmatn',sans-serif;font-weight:800;font-size:.97rem;cursor:pointer;transition:all .25s;box-shadow:0 4px 16px rgba(10,61,46,.25);"
+          onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(10,61,46,.35)'"
+          onmouseout="this.style.transform='';this.style.boxShadow='0 4px 16px rgba(10,61,46,.25)'">
+          <i class="bi bi-box-arrow-in-right me-2"></i> پیوستن به گروه
+        </button>
+      </form>
+
+      <div class="text-center mt-4">
+        <span style="font-size:.85rem;color:#aaa;">گروه ندارید؟</span>
+        <a href="{% url 'groups_app:create_group' %}"
+          style="color:#1a6644;font-weight:700;text-decoration:none;font-size:.85rem;margin-right:6px;"
+          onmouseover="this.style.color='#0a3d2e'" onmouseout="this.style.color='#1a6644'">
+          ساخت گروه جدید ←
+        </a>
+      </div>
+    </div>
+  </div>
 </div>
-{% include 'includes/footer.html' %}
+
+{% endblock %}

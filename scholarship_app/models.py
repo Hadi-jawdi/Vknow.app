@@ -3,20 +3,21 @@ from django.db import models
 class Scholarship(models.Model):
     
     LEVEL_CHOICES = [
-        ('bachelor', 'لیسانس'),
-        ('master', 'ماستری'),
-        ('phd', 'دکترا'),
-        ('all', 'همه مقاطع'),
+        ('bachelor', 'Bachelor'),
+        ('master', 'Master'),
+        ('phd', 'PHD'),
+        ('all','All'),
     ]
 
     FIELD_CHOICES = [
-        ('engineering', 'مهندسی'),
-        ('medicine', 'طب'),
-        ('science', 'علوم'),
-        ('arts', 'هنر'),
-        ('business', 'تجارت'),
-        ('law', 'حقوق'),
-        ('other', 'سایر'),
+        ('engineering', 'Engineering'),
+        ('medicine', 'Medicine'),
+        ('science', 'Science'),
+        ('arts', 'Arts'),
+        ('business', 'Business'),
+        ('law', 'Law'),
+        ('other', 'Other'),
+        ('all', "All")
     ]
 
     title        = models.CharField(max_length=255)           # نام بورسیه
@@ -26,8 +27,7 @@ class Scholarship(models.Model):
     field        = models.CharField(max_length=50, choices=FIELD_CHOICES)  # رشته
     description  = models.TextField(blank=True)               # توضیحات
     link         = models.URLField(blank=True)                 # لینک
-    start_date   = models.DateField(null=True, blank=True)    # تاریخ شروع
-    end_date     = models.DateField(null=True, blank=True)    # مهلت درخواست
+    end_date     = models.CharField(null=True, blank=True)    # مهلت درخواست
     is_active    = models.BooleanField(default=True)          # فعال/غیرفعال
     created_at   = models.DateTimeField(auto_now_add=True)
 

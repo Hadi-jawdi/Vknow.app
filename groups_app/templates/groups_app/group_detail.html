@@ -1,58 +1,157 @@
 {% include 'includes/header.html' %}
+{% load static %}
+{% block content %}
 
-<div class="container my-5">
-  <div class="card shadow-lg rounded p-4 bg-light">
-    <h2 class="mb-2">گروه: {{ group.name }}</h2>
-    <p class="text-muted">کد گروه: <strong>{{ group.code }}</strong></p>
-    
-    <hr>
+<div style="height:calc(100vh - 60px);display:flex;flex-direction:column;" dir="rtl">
 
-    <h4 class="mb-3">پیام‌ها</h4>
-    {% for msg in messages %}
-    <div class="card mb-3 shadow-sm rounded">
-      <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center mb-2">
-          <strong>{{ msg.user.username }}</strong>
-          <small class="text-muted">{{ msg.created_at|date:"Y-m-d H:i" }}</small>
-        </div>
-        <p>{{ msg.content }}</p>
-        
-        {% if msg.file %}
-        {% if ".jpg" in msg.file.url or ".png" in msg.file.url %}
-        <img src="{{ msg.file.url }}" class="img-fluid rounded mb-2" alt="attachment">
-      
-
-
-        <!-- Display image -->
-          <img src="{{ msg.file.url }}" class="img-fluid rounded shadow-sm my-2" alt="User file">
-          {% else %}
-          <!-- Download link for non-images -->
-          <a href="{{ msg.file.url }}" download class="btn btn-outline-success btn-sm my-2">دانلود فایل</a>
-          {% endif %}
-        {% endif %}
+  <!-- Group Header -->
+  <div style="background:linear-gradient(135deg,#0a3d2e,#1a6644);padding:16px 24px;display:flex;align-items:center;gap:14px;flex-shrink:0;box-shadow:0 2px 12px rgba(0,0,0,.2);">
+    <div style="width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-weight:900;color:#f0b429;font-size:1.1rem;flex-shrink:0;">
+      {{ group.name|first|upper }}
+    </div>
+    <div>
+      <div style="color:#fff;font-weight:800;font-size:1rem;">{{ group.name }}</div>
+      <div style="color:rgba(255,255,255,.6);font-size:.75rem;">
+        <i class="bi bi-people me-1"></i>{{ group.members.count }} عضو
+        &nbsp;·&nbsp;
+        <i class="bi bi-key me-1"></i>کد: <span style="font-weight:700;color:#f0b429;letter-spacing:2px;">{{ group.code }}</span>
       </div>
     </div>
-    {% empty %}
-      <p class="text-center text-muted">هنوز پیامی ارسال نشده است.</p>
-    {% endfor %}
-
-    <hr>
-    <h4 class="mb-3">ارسال پیام</h4>
-    {% if user.is_authenticated %}
-    <form method="post" enctype="multipart/form-data">
-      {% csrf_token %}
-      <div class="mb-3">
-        <textarea name="content" rows="3" class="form-control form-control-lg" placeholder="پیام خود را بنویسید..." required></textarea>
-      </div>
-      <div class="mb-3">
-        <input type="file" name="file" class="form-control">
-      </div>
-      <button type="submit" class="btn btn-success btn-lg w-100 shadow-sm">ارسال</button>
-    </form>
-    {% else %}
-      <p class="text-danger text-center mt-3">برای ارسال پیام باید وارد حساب کاربری شوید.</p>
-    {% endif %}
+    <!-- Copy code button -->
+    <button onclick="copyCode('{{ group.code }}')" title="کپی کد"
+      style="margin-right:auto;background:rgba(240,180,41,.15);border:1px solid rgba(240,180,41,.3);color:#f0b429;border-radius:8px;padding:6px 14px;font-family:'Vazirmatn',sans-serif;font-size:.78rem;font-weight:700;cursor:pointer;transition:all .2s;"
+      onmouseover="this.style.background='rgba(240,180,41,.25)'"
+      onmouseout="this.style.background='rgba(240,180,41,.15)'">
+      <i class="bi bi-clipboard me-1"></i> کپی کد
+    </button>
   </div>
+
+  <!-- Messages Area -->
+  <div id="chat-box" style="flex:1;overflow-y:auto;padding:20px 16px;background:#f5faf6;display:flex;flex-direction:column;gap:12px;">
+
+    {% for msg in messages %}
+    {% if msg.user == request.user %}
+    <!-- My message (right) -->
+    <div style="display:flex;justify-content:flex-start;align-items:flex-end;gap:8px;">
+      <div style="max-width:72%;">
+        <div style="background:linear-gradient(135deg,#0a3d2e,#1a6644);color:#fff;border-radius:18px 18px 4px 18px;padding:12px 16px;font-size:.9rem;line-height:1.7;box-shadow:0 2px 8px rgba(10,61,46,.2);">
+          {% if msg.content %}{{ msg.content }}{% endif %}
+          {% if msg.file %}
+          <div class="mt-2">
+            <a href="{{ msg.file.url }}" target="_blank"
+              style="color:#f0b429;font-size:.8rem;display:flex;align-items:center;gap:4px;text-decoration:none;">
+              <i class="bi bi-paperclip"></i> مشاهده فایل
+            </a>
+          </div>
+          {% endif %}
+        </div>
+        <div style="font-size:.7rem;color:#aaa;margin-top:4px;text-align:left;">{{ msg.created_at|date:"H:i" }}</div>
+      </div>
+    </div>
+
+    {% else %}
+    <!-- Other message (left) -->
+    <div style="display:flex;justify-content:flex-end;align-items:flex-end;gap:8px;">
+      <div style="max-width:72%;">
+        <div style="font-size:.72rem;color:#1a6644;font-weight:700;margin-bottom:4px;text-align:right;">{{ msg.user.username }}</div>
+        <div style="background:#fff;color:#1a2e24;border-radius:18px 18px 18px 4px;padding:12px 16px;font-size:.9rem;line-height:1.7;box-shadow:0 2px 8px rgba(0,0,0,.07);border:1px solid #e0ede5;">
+          {% if msg.content %}{{ msg.content }}{% endif %}
+          {% if msg.file %}
+          <div class="mt-2">
+            <a href="{{ msg.file.url }}" target="_blank"
+              style="color:#1a6644;font-size:.8rem;display:flex;align-items:center;gap:4px;text-decoration:none;">
+              <i class="bi bi-paperclip"></i> مشاهده فایل
+            </a>
+          </div>
+          {% endif %}
+        </div>
+        <div style="font-size:.7rem;color:#aaa;margin-top:4px;text-align:right;">{{ msg.created_at|date:"H:i" }}</div>
+      </div>
+      <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#1a6644,#2e9e68);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:.75rem;flex-shrink:0;">
+        {{ msg.user.username|first|upper }}
+      </div>
+    </div>
+    {% endif %}
+    {% empty %}
+    <div style="text-align:center;margin:auto;">
+      <div style="width:70px;height:70px;border-radius:50%;background:#e8f0e8;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;">
+        <i class="bi bi-chat-dots" style="font-size:1.8rem;color:#2e9e68;"></i>
+      </div>
+      <p style="color:#aaa;font-size:.9rem;">هنوز پیامی ارسال نشده — اولین نفر باشید!</p>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Message Input -->
+  <div style="background:#fff;border-top:1px solid #e0ede5;padding:12px 16px;flex-shrink:0;">
+    <form method="post" enctype="multipart/form-data" style="display:flex;align-items:center;gap:10px;">
+      {% csrf_token %}
+
+      <!-- File attach -->
+      <label for="file-input" title="ارسال فایل"
+        style="width:40px;height:40px;border-radius:50%;background:#edf7f0;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:background .2s;"
+        onmouseover="this.style.background='#d4eedf'" onmouseout="this.style.background='#edf7f0'">
+        <i class="bi bi-paperclip" style="color:#1a6644;font-size:1.1rem;"></i>
+        <input type="file" name="file" id="file-input" style="display:none;" onchange="showFileName(this)"/>
+      </label>
+
+      <!-- Text input -->
+      <input
+        type="text"
+        name="content"
+        id="msg-input"
+        placeholder="پیام خود را بنویسید..."
+        autocomplete="off"
+        style="flex:1;border:1.5px solid #d0e8d8;border-radius:50px;padding:10px 18px;font-family:'Vazirmatn',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s;"
+        onfocus="this.style.borderColor='#2e9e68'" onblur="this.style.borderColor='#d0e8d8'"
+      />
+
+      <!-- Send button -->
+      <button type="submit"
+        style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#0a3d2e,#1a6644);color:#fff;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .2s;box-shadow:0 3px 10px rgba(10,61,46,.3);"
+        onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform=''">
+        <i class="bi bi-send-fill" style="font-size:.95rem;"></i>
+      </button>
+    </form>
+
+    <!-- File name preview -->
+    <div id="file-name-preview" style="display:none;font-size:.75rem;color:#2e9e68;margin-top:6px;padding-right:52px;">
+      <i class="bi bi-paperclip me-1"></i><span></span>
+    </div>
+  </div>
+
 </div>
 
-{% include 'includes/footer.html' %}
+<script>
+  // Scroll to bottom on load
+  const chatBox = document.getElementById('chat-box');
+  chatBox.scrollTop = chatBox.scrollHeight;
+
+  // Copy group code
+  function copyCode(code) {
+    navigator.clipboard.writeText(code).then(function() {
+      const btn = event.currentTarget;
+      btn.innerHTML = '<i class="bi bi-check me-1"></i> کپی شد!';
+      setTimeout(() => btn.innerHTML = '<i class="bi bi-clipboard me-1"></i> کپی کد', 2000);
+    });
+  }
+
+  // Show file name
+  function showFileName(input) {
+    const preview = document.getElementById('file-name-preview');
+    if (input.files && input.files[0]) {
+      preview.style.display = 'block';
+      preview.querySelector('span').textContent = input.files[0].name;
+    }
+  }
+
+  // Send on Enter
+  document.getElementById('msg-input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      this.closest('form').submit();
+    }
+  });
+</script>
+
+{% endblock %}

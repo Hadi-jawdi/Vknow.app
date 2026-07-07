@@ -72,10 +72,48 @@ def logout_user(request):
     return redirect('home')
 
 
+#CLAUEDE 
+# from groups_app.models import StudyGroup, GroupMember
+
+# @login_required
+# def profile_view(request):
+#     profile, created = Profile.objects.get_or_create(user=request.user)
+
+#     if request.method == 'POST':
+#         form = ProfileUpdateForm(
+#             request.POST,
+#             request.FILES,
+#             instance=profile,
+#             user=request.user
+#         )
+#         if form.is_valid():
+#             form.save()
+#             return redirect('account_app:profile')
+#     else:
+#         form = ProfileUpdateForm(instance=profile, user=request.user)
+
+#     # groups created by user
+#     created_groups = StudyGroup.objects.filter(creator=request.user)
+
+#     # groups joined (excluding ones they created)
+#     joined_groups = GroupMember.objects.filter(
+#         user=request.user
+#     ).exclude(
+#         group__creator=request.user
+#     ).select_related('group')
+
+#     return render(request, 'account_app/pages/profile.html', {
+#         'form': form,
+#         'profile': profile,
+#         'created_groups': created_groups,
+#         'joined_groups': joined_groups,
+#     })
+
+
 
 
 @login_required
-def profile_view(request):
+def profile_view_1(request):
     # create profile if it doesn't exist
     profile, created = Profile.objects.get_or_create(user=request.user)
 
@@ -98,3 +136,40 @@ def profile_view(request):
         'profile': profile,
     })
 
+
+
+from groups_app.models import StudyGroup, GroupMember
+
+@login_required
+def profile_view(request):
+    profile, created = Profile.objects.get_or_create(user=request.user)
+
+    if request.method == 'POST':
+        form = ProfileUpdateForm(
+            request.POST,
+            request.FILES,
+            instance=profile,
+            user=request.user
+        )
+        if form.is_valid():
+            form.save()
+            return redirect('account_app:profile')
+    else:
+        form = ProfileUpdateForm(instance=profile, user=request.user)
+
+    # groups created by user
+    created_groups = StudyGroup.objects.filter(creator=request.user)
+
+    # groups joined (excluding ones they created)
+    joined_groups = GroupMember.objects.filter(
+        user=request.user
+    ).exclude(
+        group__creator=request.user
+    ).select_related('group')
+
+    return render(request, 'account_app/pages/profile.html', {
+        'form': form,
+        'profile': profile,
+        'created_groups': created_groups,
+        'joined_groups': joined_groups,
+    })
