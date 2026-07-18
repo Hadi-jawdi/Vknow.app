@@ -1,0 +1,69 @@
+{% include 'includes/header.html' %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false}
+        ]});"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4" dir="ltr" style="max-width: 760px; text-align: left">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 style="color: var(--vknow-gold, #c9a227);">{{ attempt.get_section_display }} Practice</h1>
+    <span id="sat-timer" class="badge bg-secondary fs-6">00:00</span>
+  </div>
+
+  <form method="post" action="{% url 'sat:submit_test' attempt.id %}" id="sat-test-form">
+    {% csrf_token %}
+
+    {% for ans in answers %}
+      {% with q=ans.question %}
+      <div class="card mb-4 p-3 shadow-sm">
+        <div class="small text-muted mb-1">
+          Question {{ ans.order }} of {{ attempt.total_questions }} — {{ q.domain }} — {{ q.get_difficulty_display }}
+        </div>
+
+        {% if q.paragraph %}
+          <p class="mb-2">{{ q.paragraph|linebreaksbr }}</p>
+        {% endif %}
+
+        {% if q.svg_content %}
+          <div class="mb-2">{{ q.svg_content|safe }}</div>
+        {% endif %}
+
+        <p class="fw-bold">{{ q.question_text }}</p>
+
+        {% for letter, text in q.choices.items %}
+          <div class="form-check">
+            <input class="form-check-input" type="radio"
+                   name="q_{{ q.id }}" id="q{{ q.id }}_{{ letter }}"
+                   value="{{ letter }}" required>
+            <label class="form-check-label" for="q{{ q.id }}_{{ letter }}">
+              <strong>{{ letter }}.</strong> {{ text }}
+            </label>
+          </div>
+        {% endfor %}
+      </div>
+      {% endwith %}
+    {% endfor %}
+
+    <button type="submit" class="btn btn-success w-100 mb-5">Submit Test</button>
+  </form>
+</div>
+
+<script>
+  // Simple elapsed-time display; not enforced server-side.
+  let seconds = 0;
+  const timerEl = document.getElementById('sat-timer');
+  setInterval(() => {
+    seconds++;
+    const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+    const s = String(seconds % 60).padStart(2, '0');
+    timerEl.textContent = `${m}:${s}`;
+  }, 1000);
+</script>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% include 'includes/header.html' %}
+
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false}
+        ]});"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4" style="max-width: 760px;">
+  <h1 style="color: var(--vknow-gold, #c9a227);">Results</h1>
+  <div class="card p-4 mb-4 text-center shadow-sm">
+    <div class="display-4">{{ attempt.score }} / {{ attempt.total_questions }}</div>
+    <div class="text-muted">{{ attempt.percent_correct }}% correct — {{ attempt.get_section_display }}</div>
+  </div>
+
+  {% for ans in answers %}
+    {% with q=ans.question %}
+    <div class="card mb-3 p-3 shadow-sm {% if ans.is_correct %}border-success{% else %}border-danger{% endif %}">
+      <div class="small text-muted mb-1">Question {{ ans.order }} — {{ q.domain }}</div>
+
+      {% if q.paragraph %}<p class="mb-2">{{ q.paragraph|linebreaksbr }}</p>{% endif %}
+      {% if q.svg_content %}<div class="mb-2">{{ q.svg_content|safe }}</div>{% endif %}
+
+      <p class="fw-bold">{{ q.question_text }}</p>
+
+      {% for letter, text in q.choices.items %}
+        <div class="mb-1
+          {% if letter == q.correct_answer %}text-success fw-bold{% endif %}
+          {% if letter == ans.selected_answer and letter != q.correct_answer %}text-danger text-decoration-line-through{% endif %}">
+          <strong>{{ letter }}.</strong> {{ text }}
+          {% if letter == q.correct_answer %} ✓{% endif %}
+        </div>
+      {% endfor %}
+
+      {% if q.explanation %}
+        <details class="mt-2">
+          <summary class="text-muted">Explanation</summary>
+          <p class="mt-2">{{ q.explanation }}</p>
+        </details>
+      {% endif %}
+    </div>
+    {% endwith %}
+  {% endfor %}
+
+  <a href="{% url 'sat:start_test' %}" class="btn btn-success w-100 mb-5">Take Another Test</a>
+</div>
+{% endblock %}

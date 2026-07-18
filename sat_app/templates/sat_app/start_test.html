@@ -1,0 +1,29 @@
+{% include 'includes/header.html' %}
+{% block content %}
+<div class="container py-5" style="max-width: 560px;">
+  <h1 class="mb-4" style="color: var(--vknow-gold, #c9a227);">SAT Practice Test</h1>
+
+  {% if form.non_field_errors %}
+    <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+  {% endif %}
+
+  <form method="post" class="card p-4 shadow-sm">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label class="form-label">{{ form.section.label }}</label>
+      {{ form.section }}
+    </div>
+    <div class="mb-3">
+      <label class="form-label">{{ form.num_questions.label }}</label>
+      {{ form.num_questions }}
+    </div>
+    <div class="mb-3">
+      <label class="form-label">{{ form.domain.label }}</label>
+      {{ form.domain }}
+    </div>
+    <button type="submit" class="btn btn-success w-100">Start Test</button>
+  </form>
+
+  <a href="{% url 'sat:test_history' %}" class="d-block text-center mt-3">View past attempts</a>
+</div>
+{% endblock %}
